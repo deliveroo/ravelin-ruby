@@ -11,33 +11,37 @@ describe Ravelin::Client do
   end
 
   describe '#send_event' do
-    let(:event_name) { 'my-event' }
-    let(:event_payload) { { key: 'value' } }
-    let(:event) { double('event', name: event_name, to_hash: event_payload) }
+    let(:event_name) { 'foobar' }
+    let(:event_payload) { { id: 'ch-123' } }
+    let(:event) { double('event', name: event_name, serialize: event_payload) }
     let(:client) { described_class.new(api_key: 'abc') }
 
     before { allow(client).to receive(:post) }
 
     it 'creates an event with method arguments' do
       expect(Ravelin::Event).to receive(:new).
-        with(name: 'my-event', payload: { key: 'value' }).
+        with(name: 'foo', timestamp: 12345, payload: { key: 'value' }).
         and_return(event)
 
-      client.send_event('my-event', event_payload)
+      client.send_event(
+        name: 'foo',
+        timestamp: 12345,
+        payload: { key: 'value' }
+      )
     end
 
     it 'calls #post with Event payload' do
       allow(Ravelin::Event).to receive(:new) { event }
 
-      expect(client).to receive(:post).with("/v2/my-event", { key: 'value' })
+      expect(client).to receive(:post).with("/v2/foobar", { id: 'ch-123' })
 
-      client.send_event(event_name, event_payload)
+      client.send_event
     end
   end
 
   describe '#post' do
     let(:client) { described_class.new(api_key: 'abc') }
-    let(:event) { double('event', name: 'ping', to_hash: { name: 'value' }) }
+    let(:event) { double('event', name: 'ping', serialize: { name: 'value' }) }
 
     before { allow(Ravelin::Event).to receive(:new).and_return(event) }
 
@@ -48,7 +52,7 @@ describe Ravelin::Client do
           body: { name: 'value' }.to_json
         )
 
-      client.send_event(:ping, {})
+      client.send_event
 
       expect(stub).to have_been_requested
     end
@@ -63,13 +67,13 @@ describe Ravelin::Client do
         let(:response_status) { 200 }
 
         it 'returns the response' do
-          expect( client.send_event(:ping, {}) ).to be_a(Faraday::Response)
+          expect(client.send_event).to be_a(Faraday::Response)
         end
 
         it "not treated as an error" do
           expect(client).to_not receive(:handle_error_response)
 
-          client.send_event(:ping, {})
+          client.send_event
         end
       end
 
@@ -80,7 +84,7 @@ describe Ravelin::Client do
           expect(client).to receive(:handle_error_response).
             with(kind_of(Faraday::Response))
 
-          client.send_event(:ping, {})
+          client.send_event
         end
       end
     end
@@ -89,11 +93,11 @@ describe Ravelin::Client do
   describe '#handle_error_response' do
     shared_examples 'raises error with' do |error_class|
       it "raises #{error_class} error" do
-        expect { client.send_event(:ping, {}) }.to raise_exception(error_class)
+        expect { client.send_event }.to raise_exception(error_class)
       end
     end
 
-    let(:event) { double('event', name: :ping, to_hash: {}) }
+    let(:event) { double('event', name: :ping, serialize: {}) }
     let(:client) { described_class.new(api_key: 'abc') }
 
     before do

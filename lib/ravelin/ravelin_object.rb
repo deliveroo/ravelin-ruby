@@ -3,12 +3,12 @@ module Ravelin
     class << self
       attr_reader :attributes
 
-      def ravelin_required_attributes
-        @ravelin_required_attributes ||= []
+      def required_attributes
+        @required_attributes ||= []
       end
 
-      def required_attributes(*names)
-        @ravelin_required_attributes = *names
+      def attr_required(*names)
+        @required_attributes = *names
       end
 
       def attr_accessor(*names)
@@ -27,27 +27,26 @@ module Ravelin
     end
 
     def validate
-      invalid_attrs = self.class.ravelin_required_attributes.select do |name|
+      missing = self.class.required_attributes.select do |name|
         self.send(name).nil? || self.send(name) == ''
       end
 
-      errors = invalid_attrs.map do |a|
-        %Q{"#{a}" can't be blank for #{self.class.name}}
+      if missing.any?
+        raise ArgumentError.new(%Q{missing parameters: #{missing.join(', ')}})
       end
-
-      raise InvalidParametersError.new(errors.join(', ')) if errors.any?
     end
 
-    def to_hash
+    def serialize
       self.class.attributes.each_with_object({}) do |key, hash|
-        hash[camelize(key)] = self.send(key) unless self.send(key).nil?
+        value = self.send(key)
+        key = Ravelin.camelize(key)
+
+        if value.is_a?(RavelinObject)
+          hash[key] = value.serialize
+        elsif !value.nil?
+          hash[key] = value
+        end
       end
-    end
-
-    private
-
-    def camelize(str)
-      str.to_s.gsub(/_(.)/) { |e| $1.upcase }
     end
   end
 end

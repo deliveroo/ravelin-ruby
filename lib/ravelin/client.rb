@@ -11,10 +11,10 @@ module Ravelin
       end
     end
 
-    def send_event(event_name, event_payload)
-      event = Event.new(name: event_name, payload: event_payload)
+    def send_event(**args)
+      event = Event.new(**args)
 
-      post("/v2/#{event.name}", event.to_hash)
+      post("/v2/#{event.name}", event.serialize)
     end
 
     private
