@@ -43,13 +43,19 @@ describe Ravelin::Client do
     let(:client) { described_class.new(api_key: 'abc') }
     let(:event) { double('event', name: 'ping', serialize: { name: 'value' }) }
 
-    before { allow(Ravelin::Event).to receive(:new).and_return(event) }
+    before do
+      allow(Ravelin::Event).to receive(:new).and_return(event)
+      #allow(Ravelin::Response).to receive(:new)
+    end
 
     it 'calls Ravelin with correct headers and body' do
       stub = stub_request(:post, 'https://api.ravelin.com/v2/ping').
         with(
           headers: { 'Authorization' => 'token abc' },
           body: { name: 'value' }.to_json
+        ).and_return(
+          headers: { 'Content-Type' => 'application/json' },
+          body: '{}'
         )
 
       client.send_event
@@ -60,14 +66,17 @@ describe Ravelin::Client do
     context 'response' do
       before do
         stub_request(:post, 'https://api.ravelin.com/v2/ping').
-          to_return(status: response_status)
+          to_return(
+            status: response_status,
+            body: '{}'
+          )
       end
 
       context 'successful' do
         let(:response_status) { 200 }
 
         it 'returns the response' do
-          expect(client.send_event).to be_a(Faraday::Response)
+          expect(client.send_event).to be_a(Ravelin::Response)
         end
 
         it "not treated as an error" do

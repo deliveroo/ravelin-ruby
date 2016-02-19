@@ -52,6 +52,8 @@ module Ravelin
         :pretransaction, :transaction
 
       case self.name
+        when :customer
+          validate_payload_inclusion_of :customer
         when :items
           validate_payload_inclusion_of :order_id
         when :pretransaction, :transaction
@@ -66,7 +68,8 @@ module Ravelin
 
     def validate_customer_presence_on(*events)
       if events.include?(self.name) && !payload_customer_reference_present?
-        argument_error(%q{payload missing customer_id or temp_customer_id parameter})
+        raise ArgumentError.
+          new(%q{payload missing customer_id or temp_customer_id parameter})
       end
     end
 
@@ -74,16 +77,13 @@ module Ravelin
       missing = required_keys - self.payload.keys
 
       if missing.any?
-        argument_error(%Q{payload missing parameters: #{missing.join(', ')}})
+        raise ArgumentError.
+          new(%Q{payload missing parameters: #{missing.join(', ')}})
       end
     end
 
     def payload_customer_reference_present?
       self.payload.keys.any? {|k| %i(customer_id temp_customer_id).include? k }
-    end
-
-    def argument_error(msg)
-      raise ArgumentError.new(msg)
     end
 
     def convert_to_epoch(time)

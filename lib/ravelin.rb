@@ -21,13 +21,15 @@ require 'ravelin/payment_method'
 require 'ravelin/transaction'
 
 require 'ravelin/event'
+require 'ravelin/response'
 require 'ravelin/client'
 
 module Ravelin
   @faraday_adapter = Faraday.default_adapter
+  @faraday_timeout = 1
 
   class << self
-    attr_accessor :faraday_adapter
+    attr_accessor :faraday_adapter, :faraday_timeout
 
     def camelize(str)
       str.to_s.gsub(/_(.)/) { |e| $1.upcase }

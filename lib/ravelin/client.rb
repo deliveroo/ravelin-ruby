@@ -5,7 +5,7 @@ module Ravelin
     def initialize(api_key:)
       @api_key = api_key
 
-      @connection = Faraday.new(API_BASE, { headers: headers }) do |conn|
+      @connection = Faraday.new(API_BASE, faraday_options) do |conn|
         conn.response :json, context_type: /\bjson$/
         conn.adapter Ravelin.faraday_adapter
       end
@@ -23,8 +23,7 @@ module Ravelin
       response = @connection.post(url, payload.to_json)
 
       if response.success?
-        # TODO - create and return Ravelin::Response object
-        return response
+        return Response.new(response)
       else
         handle_error_response(response)
       end
@@ -43,9 +42,15 @@ module Ravelin
       end
     end
 
-    def headers
-      { 'Authorization' => "token #{@api_key}",
-        'Content-Type'  => 'application/json; charset=utf-8' }
+    def faraday_options
+      {
+        request: { timeout: Ravelin.faraday_timeout },
+        headers: {
+          'Authorization' => "token #{@api_key}",
+          'Content-Type'  => 'application/json; charset=utf-8',
+          'User-Agent'    => "Ravelin RubyGem/#{Ravelin::VERSION}"
+        }
+      }
     end
   end
 end
