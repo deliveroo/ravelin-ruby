@@ -34,22 +34,22 @@ describe Ravelin::RavelinObject do
     end
   end
 
-  describe '#serialize' do
+  describe '#serializable_hash' do
     it 'builds a hash object with camelcases the hash keys' do
       obj = described_class.new(name: 'Dummy', email_address: 'd@example.com')
 
-      expect(obj.serialize).to eq({
+      expect(obj.serializable_hash).to eq({
         'name' => 'Dummy',
         'emailAddress' => 'd@example.com'
       })
     end
 
-    it 'serializes nested Ravelin objects' do
+    it 'builds hash objects with camelcase keys from nested Ravelin objects' do
       obj = described_class.new(name: 'Dummy')
       allow(obj).to receive(:address).
         and_return(described_class.new(name: 'Home', street: '123 St.'))
 
-      expect(obj.serialize).to eq({
+      expect(obj.serializable_hash).to eq({
         'name' => 'Dummy',
         'address' => {
           'name' => 'Home',
@@ -61,7 +61,7 @@ describe Ravelin::RavelinObject do
     it 'ignores properties with nil values' do
       obj = described_class.new(name: 'Dummy')
 
-      expect(obj.serialize).to eq({ 'name' => 'Dummy' })
+      expect(obj.serializable_hash).to eq({ 'name' => 'Dummy' })
     end
   end
 end

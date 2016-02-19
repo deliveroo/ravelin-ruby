@@ -10,14 +10,14 @@ module Ravelin
       validate_top_level_payload_params
     end
 
-    def serialize
+    def serializable_hash
       payload_hash = hash_map(self.payload) do |k, v|
         k = Ravelin.camelize(k)
 
         if v.is_a?(Ravelin::RavelinObject)
-          [k, v.serialize]
+          [k, v.serializable_hash]
         elsif v.is_a?(Array)
-          [k, v.map(&:serialize)]
+          [k, v.map(&:serializable_hash)]
         else
           [k, v]
         end

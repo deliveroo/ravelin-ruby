@@ -9,7 +9,7 @@ describe Ravelin::Event do
     described_class.new(name: :ping, timestamp: 12345, payload: {})
   end
 
-  describe '#serialize' do
+  describe '#serializable_hash' do
     let(:dummy) { MyDummyClass.new(name: 'Fraudster') }
 
     before { allow(event).to receive(:payload).and_return(payload) }
@@ -18,15 +18,15 @@ describe Ravelin::Event do
       let(:payload) { { name: 'John' } }
 
       it 'left as they are' do
-        expect(event.serialize).to eq({ 'name' => 'John', 'timestamp' => 12345 })
+        expect(event.serializable_hash).to eq({ 'name' => 'John', 'timestamp' => 12345 })
       end
     end
 
     context 'payload with Ravelin objects' do
       let(:payload) { { dummy: dummy } }
 
-      it 'converts the Ravelin objects to hashes' do
-        expect(event.serialize).to eq({
+      it 'converts the Ravelin objects to hash with camelcase keys' do
+        expect(event.serializable_hash).to eq({
           'timestamp' => 12345,
           'dummy' => { 'name' => 'Fraudster' }
         })
@@ -36,8 +36,8 @@ describe Ravelin::Event do
     context 'payload with lists of Ravelin objects' do
       let(:payload) { { things: [dummy, dummy] } }
 
-      it 'converts the list of Ravelin objects to hashes' do
-        expect(event.serialize).to eq({
+      it 'converts the list of Ravelin objects to hashes with camelcase keys' do
+        expect(event.serializable_hash).to eq({
           'timestamp' => 12345,
           'things' => [
             { 'name' => 'Fraudster' },

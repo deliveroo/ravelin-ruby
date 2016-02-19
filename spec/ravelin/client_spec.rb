@@ -11,10 +11,12 @@ describe Ravelin::Client do
   end
 
   describe '#send_event' do
+    let(:client) { described_class.new(api_key: 'abc') }
     let(:event_name) { 'foobar' }
     let(:event_payload) { { id: 'ch-123' } }
-    let(:event) { double('event', name: event_name, serialize: event_payload) }
-    let(:client) { described_class.new(api_key: 'abc') }
+    let(:event) do
+      double('event', name: event_name, serializable_hash: event_payload)
+    end
 
     before { allow(client).to receive(:post) }
 
@@ -41,7 +43,9 @@ describe Ravelin::Client do
 
   describe '#post' do
     let(:client) { described_class.new(api_key: 'abc') }
-    let(:event) { double('event', name: 'ping', serialize: { name: 'value' }) }
+    let(:event) do
+      double('event', name: 'ping', serializable_hash: { name: 'value' })
+    end
 
     before do
       allow(Ravelin::Event).to receive(:new).and_return(event)
@@ -106,7 +110,7 @@ describe Ravelin::Client do
       end
     end
 
-    let(:event) { double('event', name: :ping, serialize: {}) }
+    let(:event) { double('event', name: :ping, serializable_hash: {}) }
     let(:client) { described_class.new(api_key: 'abc') }
 
     before do

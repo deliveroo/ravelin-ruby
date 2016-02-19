@@ -36,13 +36,13 @@ module Ravelin
       end
     end
 
-    def serialize
+    def serializable_hash
       self.class.attributes.each_with_object({}) do |key, hash|
         value = self.send(key)
         key = Ravelin.camelize(key)
 
         if value.is_a?(RavelinObject)
-          hash[key] = value.serialize
+          hash[key] = value.serializable_hash
         elsif !value.nil?
           hash[key] = value
         end

@@ -14,7 +14,7 @@ module Ravelin
     def send_event(**args)
       event = Event.new(**args)
 
-      post("/v2/#{event.name}", event.serialize)
+      post("/v2/#{event.name}", event.serializable_hash)
     end
 
     private
