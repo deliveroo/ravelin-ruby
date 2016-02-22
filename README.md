@@ -1,14 +1,10 @@
 # Ravelin
 
-<<<<<<< HEAD
-The Ravelin gem is a Ruby wrapper for the
-(Ravelin API)[https://developer.ravelin.com]. Ravelin is a fraud detection
-tool. See https://ravelin.com for more information.
-=======
 [![Build Status](https://travis-ci.org/deliveroo/ravelin-ruby.svg?branch=master)](https://travis-ci.org/deliveroo/ravelin-ruby)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/ravelin`. To experiment with that code, run `bin/console` for an interactive prompt.
->>>>>>> master
+The Ravelin gem is a Ruby wrapper for the
+[Ravelin API](https://developer.ravelin.com). Ravelin is a fraud detection
+tool. See https://ravelin.com for more information.
 
 
 ## Installation
@@ -66,9 +62,9 @@ client.send_event(
 * `:chargeback`
 
 Information about the payload parameters for each event can be found in the
-(Ravelin docs)[https://developer.ravelin.com] and by checking out the
+[Ravelin docs](https://developer.ravelin.com) and by checking out the
 `Ravelin::RavelinObject` classes in the gem
-(source code)[https://github.com/deliveroo/ravelin-ruby/tree/master/lib].
+[source code](https://github.com/deliveroo/ravelin-ruby/tree/master/lib).
 
 *Note:* The payload parameter names should use underscore formatting, not
 camelcase formatting.
