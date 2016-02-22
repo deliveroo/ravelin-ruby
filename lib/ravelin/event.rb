@@ -16,20 +16,12 @@ module Ravelin
 
         if v.is_a?(Ravelin::RavelinObject)
           [k, v.serializable_hash]
-        elsif v.is_a?(Array)
-          [k, v.map(&:serializable_hash)]
         else
           [k, v]
         end
       end
 
-      return payload_hash.merge('timestamp' => timestamp)
-    end
-
-    def list_object_classes
-      {
-        items: Item
-      }
+      payload_hash.merge('timestamp' => timestamp)
     end
 
     def object_classes
@@ -37,7 +29,6 @@ module Ravelin
         chargeback:     Chargeback,
         customer:       Customer,
         device:         Device,
-        item:           Item,
         location:       Location,
         order:          Order,
         payment_method: PaymentMethod,
@@ -54,8 +45,6 @@ module Ravelin
       case self.name
         when :customer
           validate_payload_inclusion_of :customer
-        when :items
-          validate_payload_inclusion_of :order_id
         when :pretransaction, :transaction
           validate_payload_inclusion_of :order_id, :payment_method_id
         when :login
@@ -118,7 +107,7 @@ module Ravelin
         pre_transaction: :pretransaction
       }
 
-      return underscore_mapping.fetch(str.to_sym, str.to_sym)
+      underscore_mapping.fetch(str.to_sym, str.to_sym)
     end
 
     def hash_map(hash, &block)

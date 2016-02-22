@@ -41,6 +41,8 @@ module Ravelin
 
         if value.is_a?(RavelinObject)
           hash[key] = value.serializable_hash
+        elsif value.is_a?(Array)
+          hash[key] = value.map(&:serializable_hash)
         elsif !value.nil?
           hash[key] = value
         end

@@ -57,8 +57,8 @@ module Ravelin
         request: { timeout: Ravelin.faraday_timeout },
         headers: {
           'Authorization' => "token #{@api_key}",
-          'Content-Type'  => 'application/json; charset=utf-8',
-          'User-Agent'    => "Ravelin RubyGem/#{Ravelin::VERSION}"
+          'Content-Type'  => 'application/json; charset=utf-8'.freeze,
+          'User-Agent'    => "Ravelin RubyGem/#{Ravelin::VERSION}".freeze
         }
       }
     end

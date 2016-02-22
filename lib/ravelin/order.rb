@@ -5,6 +5,7 @@ module Ravelin
       :price,
       :currency,
       :seller_id,
+      :items,
       :from,
       :to,
       :country,
@@ -12,6 +13,12 @@ module Ravelin
       :custom
 
     attr_required :order_id
+
+    def items=(arr)
+      #raise ArgumentError.new('items= requires an Array') unless arr.is_a?(Array)
+
+      @items = arr.map { |item| Ravelin::Item.new(item) }
+    end
 
     def from=(obj)
       @from = Ravelin::Location.new(obj)
