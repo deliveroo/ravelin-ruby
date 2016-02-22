@@ -41,7 +41,7 @@ module Ravelin
         location:       Location,
         order:          Order,
         payment_method: PaymentMethod,
-        transaction:    self.name == :transaction ? Transaction : PreTransaction
+        transaction:    self.name == :pretransaction ? PreTransaction : Transaction
       }
     end
 
