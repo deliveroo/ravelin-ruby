@@ -17,6 +17,16 @@ module Ravelin
       post("/v2/#{event.name}", event.serializable_hash)
     end
 
+    def send_backfill_event(**args)
+      unless args.has_key?(:timestamp)
+        raise ArgumentError.new('missing parameters: timestamp')
+      end
+
+      event = Event.new(**args)
+
+      post("/v2/backfill/#{event.name}", event.serializable_hash)
+    end
+
     private
 
     def post(url, payload)

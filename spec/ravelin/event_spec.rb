@@ -18,7 +18,10 @@ describe Ravelin::Event do
       let(:payload) { { name: 'John' } }
 
       it 'left as they are' do
-        expect(event.serializable_hash).to eq({ 'name' => 'John', 'timestamp' => 12345 })
+        expect(event.serializable_hash).to eq({
+          'name' => 'John',
+          'timestamp' => 12345
+        })
       end
     end
 
@@ -50,16 +53,102 @@ describe Ravelin::Event do
 
   describe '#validate_top_level_payload_params' do
     context 'customer presence required' do
-      pending
+      it 'throws ArgumentError with no customer_id or temp_customer_id' do
+        expect {
+          described_class.new(name: :order, payload: {})
+        }.to raise_exception(
+          ArgumentError,
+          /payload missing customer_id or temp_customer_id/
+        )
+      end
+
+      it 'accepts customer_id' do
+        expect {
+          described_class.new(name: :order, payload: { customer_id: 1 })
+        }.to_not raise_exception
+      end
+
+      it 'accepts temp_customer_id' do
+        expect {
+          described_class.new(name: :order, payload: { temp_customer_id: 2 })
+        }.to_not raise_exception
+      end
     end
 
     context 'payload parameters required' do
-      pending
+      it 'throws ArgumentError with missing payload parameters' do
+        expect {
+          described_class.new(name: :customer, payload: {})
+        }.to raise_exception(
+          ArgumentError,
+          /payload missing parameters: customer/
+        )
+      end
+
+      it 'is executed cleanly with required payload parameters' do
+        expect {
+          described_class.new(
+            name: :customer,
+            payload: { customer: { customer_id: 123 } }
+          )
+        }.to_not raise_exception
+      end
     end
   end
 
   describe '#convert_to_epoch' do
-    pending
+    let(:event) do
+      described_class.new(name: :ping, payload: {}, timestamp: timestamp)
+    end
+
+    context 'Time argument' do
+      let(:timestamp) { Time.now }
+
+      it 'returns an epoch Integer' do
+        expect(event.timestamp).to be_an(Integer)
+      end
+    end
+
+    context 'DateTime argument responding to #to_i' do
+      let(:timestamp) { DateTime.now }
+
+      # Simulate Rails DateTime objects
+      before { allow(timestamp).to receive(:to_i) { Time.now.to_i } }
+
+      it 'returns an epoch Integer' do
+        expect(event.timestamp).to be_an(Integer)
+      end
+    end
+
+    context 'Integer' do
+      let(:timestamp) { Time.now.to_i }
+
+      it 'returns an epoch Integer' do
+        expect(event.timestamp).to be_an(Integer)
+      end
+    end
+
+    context 'DateTime argument not responding to #to_i' do
+      let(:timestamp) { DateTime.now }
+
+      it 'raises a TypeError exception' do
+        expect { event.timestamp }.to raise_exception(
+          TypeError,
+          /timestamp requires a Time or epoch Integer/
+        )
+      end
+    end
+
+    context 'String' do
+      let(:timestamp) { '2015-10-10' }
+
+      it 'raises a TypeError exception' do
+        expect { event.timestamp }.to raise_exception(
+          TypeError,
+          /timestamp requires a Time or epoch Integer/
+        )
+      end
+    end
   end
 
   describe '#convert_to_ravelin_objects' do
@@ -68,9 +157,9 @@ describe Ravelin::Event do
     end
 
     before do
-      allow(Ravelin::Event).to receive(:object_classes).
+      allow_any_instance_of(Ravelin::Event).to receive(:object_classes).
         and_return({ dummy: MyDummyClass })
-      allow(Ravelin::Event).to receive(:list_object_classes).
+      allow_any_instance_of(Ravelin::Event).to receive(:list_object_classes).
         and_return({ things: MyDummyClass })
     end
 

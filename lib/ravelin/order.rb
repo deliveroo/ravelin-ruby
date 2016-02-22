@@ -11,7 +11,7 @@ module Ravelin
       :market,
       :custom
 
-    attr_required :order_id, :price
+    attr_required :order_id
 
     def from=(obj)
       @from = Ravelin::Location.new(obj)

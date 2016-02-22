@@ -19,9 +19,7 @@ module Ravelin
     end
 
     def initialize(**args)
-      args.each do |key, value|
-        self.send("#{key}=", value)
-      end
+      args.each { |key, value| self.send("#{key}=", value) }
 
       validate
     end

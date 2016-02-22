@@ -3,10 +3,16 @@ module Ravelin
     attr_accessor :location_id,
       :street1,
       :street2,
-      :locality,
-      :postal_code,
+      :neighbourhood,
+      :zone,
+      :city,
+      :region,
       :country,
+      :po_box_number,
+      :postal_code,
       :latitude,
-      :longitude
+      :longitude,
+      :geohash,
+      :custom
   end
 end

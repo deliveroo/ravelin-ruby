@@ -26,13 +26,13 @@ module Ravelin
       return payload_hash.merge('timestamp' => timestamp)
     end
 
-    def self.list_object_classes
+    def list_object_classes
       {
         items: Item
       }
     end
 
-    def self.object_classes
+    def object_classes
       {
         chargeback:     Chargeback,
         customer:       Customer,
@@ -41,7 +41,7 @@ module Ravelin
         location:       Location,
         order:          Order,
         payment_method: PaymentMethod,
-        transaction:    Transaction
+        transaction:    self.name == :transaction ? Transaction : PreTransaction
       }
     end
 
@@ -89,7 +89,7 @@ module Ravelin
     def convert_to_epoch(time)
       if time.is_a?(Time)
         time.to_i
-      elsif time.is_a?(DateTime) && time.responds_to?(:to_i)
+      elsif time.is_a?(DateTime) && time.respond_to?(:to_i)
         time.to_i
       elsif time.is_a?(Integer)
         time
@@ -102,9 +102,9 @@ module Ravelin
       hash_map(payload) do |k, v|
         k = k.to_sym
 
-        if v.is_a?(Array) && klass = self.class.list_object_classes[k]
+        if v.is_a?(Array) && klass = list_object_classes[k]
           [k, v.map { |item| klass.new(item) }]
-        elsif v.is_a?(Hash) && klass = self.class.object_classes[k]
+        elsif v.is_a?(Hash) && klass = object_classes[k]
           [k, klass.new(v)]
         else
           [k, v]

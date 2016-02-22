@@ -18,6 +18,7 @@ require 'ravelin/item'
 require 'ravelin/location'
 require 'ravelin/order'
 require 'ravelin/payment_method'
+require 'ravelin/pre_transaction'
 require 'ravelin/transaction'
 
 require 'ravelin/event'
