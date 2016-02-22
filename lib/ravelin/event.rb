@@ -3,7 +3,7 @@ module Ravelin
     attr_accessor :name, :timestamp, :payload
 
     def initialize(name:, payload:, timestamp: nil)
-      @name = name.to_sym
+      @name = convert_event_name(name)
       @payload = convert_to_ravelin_objects(payload)
       @timestamp = timestamp.nil? ? Time.now.to_i : convert_to_epoch(timestamp)
 
@@ -110,6 +110,15 @@ module Ravelin
           [k, v]
         end
       end
+    end
+
+    def convert_event_name(str)
+      underscore_mapping = {
+        payment_method: :paymentmethod,
+        pre_transaction: :pretransaction
+      }
+
+      return underscore_mapping.fetch(str.to_sym, str.to_sym)
     end
 
     def hash_map(hash, &block)
