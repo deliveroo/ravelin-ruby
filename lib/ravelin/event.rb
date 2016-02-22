@@ -91,9 +91,7 @@ module Ravelin
       hash_map(payload) do |k, v|
         k = k.to_sym
 
-        if v.is_a?(Array) && klass = list_object_classes[k]
-          [k, v.map { |item| klass.new(item) }]
-        elsif v.is_a?(Hash) && klass = object_classes[k]
+        if v.is_a?(Hash) && klass = object_classes[k]
           [k, klass.new(v)]
         else
           [k, v]
