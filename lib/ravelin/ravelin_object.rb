@@ -1,7 +1,7 @@
 module Ravelin
   class RavelinObject
     class << self
-      attr_reader :attributes
+      attr_reader :attr_accessor_names
 
       def required_attributes
         @required_attributes ||= []
@@ -12,8 +12,8 @@ module Ravelin
       end
 
       def attr_accessor(*names)
-        @attributes ||= []
-        @attributes.concat(names)
+        @attr_accessor_names ||= []
+        @attr_accessor_names.concat(names)
         super
       end
     end
@@ -35,7 +35,7 @@ module Ravelin
     end
 
     def serializable_hash
-      self.class.attributes.each_with_object({}) do |key, hash|
+      self.class.attr_accessor_names.each_with_object({}) do |key, hash|
         value = self.send(key)
         key = Ravelin.camelize(key)
 

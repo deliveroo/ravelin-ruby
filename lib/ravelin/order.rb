@@ -15,7 +15,7 @@ module Ravelin
     attr_required :order_id
 
     def items=(arr)
-      #raise ArgumentError.new('items= requires an Array') unless arr.is_a?(Array)
+      raise ArgumentError.new('items= requires an Array') unless arr.is_a?(Array)
 
       @items = arr.map { |item| Ravelin::Item.new(item) }
     end
