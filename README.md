@@ -25,12 +25,27 @@ Or install it yourself as:
 
 ## Usage
 
+
 ### Authentication
 
 First think to do is create a client with your Ravelin API key.
 
 ```ruby
 client = Ravelin::Client.new(api_key: 'sk_test_XXX')
+```
+
+
+### Configuration
+
+The Ravelin gem uses [Faraday](https://github.com/lostisland/faraday) under the hood. The Faraday adapter and request
+timeout can be configured with the following:
+
+```ruby
+require 'ravelin'
+require 'net/http/persistent'
+
+Ravelin.faraday_adapter = :net_http_persistent  # default is :net_http
+Ravelin.faraday_timeout = 10                    # default is 1 second
 ```
 
 
@@ -49,11 +64,11 @@ client.send_event(
 )
 ```
 
+
 #### Event names
 
 * `:customer`
 * `:order`
-* `:items`
 * `:payment_method`
 * `:pre_transaction`
 * `:transaction`
@@ -69,6 +84,57 @@ Information about the payload parameters for each event can be found in the
 *Note:* The payload parameter names should use underscore formatting, not
 camelcase formatting.
 
+
+#### Event examples
+
+```ruby
+# Send a customer event
+
+client.send_event(
+  name: :customer,
+  payload: {
+    customer: {
+      customer_id: 'cus_123',
+      given_name:  'Joe',
+      family_name: 'Fraudster',
+      location: {
+        street1:     '123 Street Lane',
+        city:        'London',
+        postal_code: 'SW1A 0AA',
+        country:     'GBR'
+      }
+    }
+  }
+)
+
+# Send an order event
+
+client.send_event(
+  name: :order,
+  payload: {
+    customer_id: 'cus_123',
+    order: {
+      order_id: 'ord_123',
+      currency: 'GBP',
+      price:    1000,
+      from: {
+        street1:     '123 Street Lane',
+        postal_code: 'SW1A 0AA',
+        country:     'GBR'
+      },
+      to: {
+        street1:     '123 Street Lane',
+        postal_code: 'SW1A 0AA',
+        country:     'GBR'
+      },
+      items: [
+        { sku: 'itm_1', quantity: 1 },
+        { sku: 'itm_2', quantity: 1 }
+      ]
+    }
+  }
+)
+```
 
 ### Send a backfill event
 
