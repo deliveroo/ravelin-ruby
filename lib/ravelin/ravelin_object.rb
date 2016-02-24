@@ -43,6 +43,8 @@ module Ravelin
           hash[key] = value.serializable_hash
         elsif value.is_a?(Array)
           hash[key] = value.map(&:serializable_hash)
+        elsif value.is_a?(Time) || value.is_a?(Date) || value.is_a?(DateTime)
+          hash[key] = Ravelin.datetime_to_epoch(value)
         elsif !value.nil?
           hash[key] = value
         end

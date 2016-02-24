@@ -35,5 +35,13 @@ module Ravelin
     def camelize(str)
       str.to_s.gsub(/_(.)/) { |e| $1.upcase }
     end
+
+    def datetime_to_epoch(val)
+      if val.respond_to?(:to_i)
+        val.to_i
+      else
+        val.to_time.to_i
+      end
+    end
   end
 end

@@ -75,13 +75,11 @@ module Ravelin
       self.payload.keys.any? {|k| %i(customer_id temp_customer_id).include? k }
     end
 
-    def convert_to_epoch(time)
-      if time.is_a?(Time)
-        time.to_i
-      elsif time.is_a?(DateTime) && time.respond_to?(:to_i)
-        time.to_i
-      elsif time.is_a?(Integer)
-        time
+    def convert_to_epoch(val)
+      if val.is_a?(Time) || val.is_a?(Date) || val.is_a?(DateTime)
+        Ravelin.datetime_to_epoch(val)
+      elsif val.is_a?(Integer)
+        val
       else
         raise TypeError.new(%Q{timestamp requires a Time or epoch Integer})
       end
