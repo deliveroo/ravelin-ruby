@@ -114,17 +114,6 @@ describe Ravelin::Event do
       end
     end
 
-    context 'DateTime argument not responding to #to_i' do
-      let(:timestamp) { DateTime.now }
-
-      it 'raises a TypeError exception' do
-        expect { event.timestamp }.to raise_exception(
-          TypeError,
-          /timestamp requires a Time or epoch Integer/
-        )
-      end
-    end
-
     context 'String' do
       let(:timestamp) { '2015-10-10' }
 
