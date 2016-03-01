@@ -19,7 +19,9 @@ module Ravelin
     end
 
     def initialize(**args)
-      args.each { |key, value| self.send("#{key}=", value) }
+      args.each do |key, value|
+        self.send("#{key}=", convert_ids_to_strings(key, value))
+      end
 
       validate
     end
@@ -49,6 +51,12 @@ module Ravelin
           hash[key] = value
         end
       end
+    end
+
+    private
+
+    def convert_ids_to_strings(key, value)
+      key.to_s.match(/_id\Z/) && value.is_a?(Integer) ? value.to_s : value
     end
   end
 end

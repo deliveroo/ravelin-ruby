@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Ravelin::RavelinObject do
   before do
-    described_class.attr_accessor :name, :email_address, :address, :street
+    described_class.attr_accessor :name, :email_address, :address, :street, :customer_id
     described_class.attr_required :name
   end
 
@@ -23,6 +23,18 @@ describe Ravelin::RavelinObject do
       expect {
         described_class.new(name: 'Dummy', nickname: 'dum dum')
       }.to raise_exception(NoMethodError, /nickname/)
+    end
+
+    it "converts integer attributes suffixed with _id to strings" do
+      obj = described_class.new(name: 'Dummy', customer_id: 123)
+
+      expect(obj.customer_id).to eq('123')
+    end
+
+    it 'leaves integer attributes not suffixed with _id as integers' do
+      obj = described_class.new(name: 'Dummy', street: 123)
+
+      expect(obj.street).to eq(123)
     end
   end
 
