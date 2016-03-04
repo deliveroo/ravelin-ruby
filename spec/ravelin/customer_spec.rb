@@ -6,7 +6,7 @@ describe Ravelin::Customer do
   end
 
   it 'raises exception when missing required params' do
-    expect { described_class.new }.to raise_exception(
+    expect { described_class.new({}) }.to raise_exception(
       ArgumentError,
       'missing parameters: customer_id'
     )

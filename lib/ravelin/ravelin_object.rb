@@ -18,7 +18,7 @@ module Ravelin
       end
     end
 
-    def initialize(**args)
+    def initialize(args)
       args.each do |key, value|
         self.send("#{key}=", convert_ids_to_strings(key, value))
       end
