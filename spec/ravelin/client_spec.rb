@@ -39,7 +39,7 @@ describe Ravelin::Client do
     it 'calls #post with Event payload' do
       allow(Ravelin::Event).to receive(:new) { event }
 
-      expect(client).to receive(:post).with("/v2/foobar", { id: 'ch-123' })
+      expect(client).to receive(:post).with("/v2/foobar?score=true", { id: 'ch-123' })
 
       client.send_event
     end
@@ -86,10 +86,11 @@ describe Ravelin::Client do
     end
 
     it 'calls Ravelin with correct headers and body' do
-      stub = stub_request(:post, 'https://api.ravelin.com/v2/ping').
+      stub = stub_request(:post, 'https://api.ravelin.com/v2/ping?score=true').
         with(
           headers: { 'Authorization' => 'token abc' },
-          body: { name: 'value' }.to_json
+          body: { name: 'value' }.to_json,
+          query: { score: true },
         ).and_return(
           headers: { 'Content-Type' => 'application/json' },
           body: '{}'
@@ -103,6 +104,9 @@ describe Ravelin::Client do
     context 'response' do
       before do
         stub_request(:post, 'https://api.ravelin.com/v2/ping').
+          with(
+            query: { score: true },
+          ).
           to_return(
             status: response_status,
             body: '{}'
@@ -149,6 +153,7 @@ describe Ravelin::Client do
     before do
       allow(Ravelin::Event).to receive(:new).and_return(event)
       stub_request(:post, 'https://api.ravelin.com/v2/ping').
+        with(query: { score: true }).
         and_return(status: status_code, body: "{}")
     end
 
