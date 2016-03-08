@@ -51,7 +51,7 @@ Ravelin.faraday_timeout = 10                    # default is 1 second
 
 ### Send an event
 
-Events require an event `name` and `payload` as arguments. There is also an
+Events require an event `name` and `payload` as named arguments. There is also an
 optional `timestamp` argument if your event occurred at a different time.
 
 ```ruby
@@ -171,4 +171,3 @@ the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 The gem is available as open source under the terms of the
 [MIT License](http://opensource.org/licenses/MIT).
-
