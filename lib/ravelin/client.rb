@@ -12,9 +12,12 @@ module Ravelin
     end
 
     def send_event(**args)
+      score = args.delete(:score)
       event = Event.new(**args)
 
-      post("/v2/#{event.name}?score=true", event.serializable_hash)
+      score_param = score ? "?score=true" : nil
+
+      post("/v2/#{event.name}#{score_param}", event.serializable_hash)
     end
 
     def send_backfill_event(**args)

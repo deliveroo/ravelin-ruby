@@ -52,12 +52,14 @@ Ravelin.faraday_timeout = 10                    # default is 1 second
 ### Send an event
 
 Events require an event `name` and `payload` as named arguments. There is also an
-optional `timestamp` argument if your event occurred at a different time.
+optional `timestamp` argument if your event occurred at a different time. The score
+argument will return a score for that User from Ravelin.
 
 ```ruby
 client.send_event(
   name: :customer,
   timestamp: Time.now,
+  score: true,
   payload: {
     # ...
   }
