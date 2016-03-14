@@ -43,5 +43,9 @@ module Ravelin
         val.to_time.to_i
       end
     end
+
+    def convert_ids_to_strings(key, value)
+      key.to_s.match(/_id\Z/) && value.is_a?(Integer) ? value.to_s : value
+    end
   end
 end
