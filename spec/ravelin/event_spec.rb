@@ -151,5 +151,13 @@ describe Ravelin::Event do
         expect(event.payload).to eq({ timestamp: 12345 })
       end
     end
+
+    context 'when an _id field is present' do
+      let(:payload) { { customer_id: 123 } }
+
+      it "converts integer attributes suffixed with _id to strings" do
+        expect(event.payload).to eq({ customer_id: '123' })
+      end
+    end
   end
 end

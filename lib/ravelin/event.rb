@@ -39,7 +39,7 @@ module Ravelin
     private
 
     def validate_top_level_payload_params
-      validate_customer_presence_on :order, :items, :paymentmethod,
+      validate_customer_id_presence_on :order, :paymentmethod,
         :pretransaction, :transaction
 
       case self.name
@@ -50,12 +50,12 @@ module Ravelin
         when :login
           validate_payload_inclusion_of :customer_id, :temp_customer_id
         when :checkout
-          validate_payload_inclusion_of :customer, :order, :items,
+          validate_payload_inclusion_of :customer, :order,
             :payment_method, :transaction
       end
     end
 
-    def validate_customer_presence_on(*events)
+    def validate_customer_id_presence_on(*events)
       if events.include?(self.name) && !payload_customer_reference_present?
         raise ArgumentError.
           new(%q{payload missing customer_id or temp_customer_id parameter})
@@ -88,6 +88,7 @@ module Ravelin
     def convert_to_ravelin_objects(payload)
       hash_map(payload) do |k, v|
         k = k.to_sym
+        v = Ravelin.convert_ids_to_strings(k, v)
 
         if v.is_a?(Hash) && klass = object_classes[k]
           [k, klass.new(v)]
