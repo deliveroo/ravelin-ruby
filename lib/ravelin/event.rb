@@ -51,7 +51,7 @@ module Ravelin
           validate_payload_inclusion_of :customer_id, :temp_customer_id
         when :checkout
           validate_payload_inclusion_of :customer, :order,
-            :payment_method, :transaction
+            :payment_method
       end
     end
 
