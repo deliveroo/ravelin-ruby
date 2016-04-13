@@ -14,8 +14,7 @@ module Ravelin
       :avs_result_code,
       :cvv_result_code
 
-    attr_required :transaction_id,
-      :currency,
+    attr_required :currency,
       :debit,
       :credit,
       :gateway,
