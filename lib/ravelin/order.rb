@@ -10,7 +10,9 @@ module Ravelin
       :to,
       :country,
       :market,
-      :custom
+      :custom,
+      :creation_time,
+      :execution_time
 
     attr_required :order_id
 
