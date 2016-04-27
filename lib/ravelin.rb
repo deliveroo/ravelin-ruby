@@ -37,10 +37,15 @@ module Ravelin
     end
 
     def datetime_to_epoch(val)
-      if val.respond_to?(:to_i)
+      case val
+      when Date
+        val.to_datetime.to_time.to_i
+      when DateTime
+        val.to_time.to_i
+      when Time
         val.to_i
       else
-        val.to_time.to_i
+        val.to_i
       end
     end
 

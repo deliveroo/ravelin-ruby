@@ -79,7 +79,7 @@ describe Ravelin::RavelinObject do
 
   describe '#convert_to_epoch' do
     it 'converts Time to epoch' do
-      obj = described_class.new(name: Time.new(2015,1,1,0,0))
+      obj = described_class.new(name: Time.new(2015,1,1,0,0,0,'+00:00'))
 
       expect(obj.serializable_hash).to eq({ 'name' => 1420070400 })
     end
@@ -91,7 +91,7 @@ describe Ravelin::RavelinObject do
     end
 
     it 'converts DateTime to epoch' do
-      obj = described_class.new(name: DateTime.new(2014,1,1,0,0))
+      obj = described_class.new(name: DateTime.new(2014,1,1,0,0,0,'+00:00'))
 
       expect(obj.serializable_hash).to eq({ 'name' => 1388534400 })
     end
