@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Ravelin::Order do
   describe '#items=' do
-    let(:order) { described_class.new(order_id: 1, items: items) }
+    let(:order) { described_class.new(order_id: 1, items: items, status: { stage: 'cancelled', reason: 'buyer' }) }
 
     context 'argument not an array' do
       let(:items) { 'a string' }
