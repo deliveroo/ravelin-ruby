@@ -12,7 +12,8 @@ module Ravelin
       :market,
       :custom,
       :creation_time,
-      :execution_time
+      :execution_time,
+      :status
 
     attr_required :order_id
 
