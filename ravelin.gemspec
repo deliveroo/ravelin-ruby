@@ -6,8 +6,8 @@ require 'ravelin/version'
 Gem::Specification.new do |spec|
   spec.name          = 'ravelin'
   spec.version       = Ravelin::VERSION
-  spec.authors       = ['Sam Levy']
-  spec.email         = ['sam.levy@deliveroo.co.uk']
+  spec.authors       = ['Sam Levy', 'Tommy Palmer']
+  spec.email         = ['sam.levy@deliveroo.co.uk', 'tommy.palmer@deliveroo.co.uk']
 
   spec.summary       = %q{Ruby bindings for the Ravelin API}
   spec.description   = %q{Ravelin is a fraud detection tool. See https://www.ravelin.com for details.}
