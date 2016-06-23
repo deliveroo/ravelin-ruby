@@ -32,7 +32,8 @@ module Ravelin
         location:       Location,
         order:          Order,
         payment_method: PaymentMethod,
-        transaction:    self.name == :pretransaction ? PreTransaction : Transaction
+        transaction:    self.name == :pretransaction ? PreTransaction : Transaction,
+        label:          Label,
       }
     end
 
@@ -40,7 +41,7 @@ module Ravelin
 
     def validate_top_level_payload_params
       validate_customer_id_presence_on :order, :paymentmethod,
-        :pretransaction, :transaction
+        :pretransaction, :transaction, :label
 
       case self.name
         when :customer
@@ -101,7 +102,8 @@ module Ravelin
     def convert_event_name(str)
       underscore_mapping = {
         payment_method: :paymentmethod,
-        pre_transaction: :pretransaction
+        pre_transaction: :pretransaction,
+        label: 'label/customer'.to_sym
       }
 
       underscore_mapping.fetch(str.to_sym, str.to_sym)

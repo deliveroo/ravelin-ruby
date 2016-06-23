@@ -121,27 +121,40 @@ describe Ravelin::Client do
         stub_request(:post, 'https://api.ravelin.com/v2/ping').
           to_return(
             status: response_status,
-            body: '{}'
+            body: body
           )
       end
 
       context 'successful' do
-        let(:response_status) { 200 }
+        shared_examples 'successful request' do
+          it 'returns the response' do
+            expect(client.send_event).to be_a(Ravelin::Response)
+          end
 
-        it 'returns the response' do
-          expect(client.send_event).to be_a(Ravelin::Response)
+          it "not treated as an error" do
+            expect(client).to_not receive(:handle_error_response)
+
+            client.send_event
+          end
         end
 
-        it "not treated as an error" do
-          expect(client).to_not receive(:handle_error_response)
+        context 'when the response code is 200' do
+          let(:response_status) { 200 }
+          let(:body) { '{}' }
+          it_behaves_like 'successful request'
+        end
 
-          client.send_event
+        context 'when the response code is 200' do
+          let(:response_status) { 204 }
+          let(:body) { '' }
+          it_behaves_like 'successful request'
         end
       end
 
       context 'error' do
         let(:response_status) { 400 }
-
+        let(:body) { '{}' }
+        
         it 'handles error response' do
           expect(client).to receive(:handle_error_response).
             with(kind_of(Faraday::Response))
