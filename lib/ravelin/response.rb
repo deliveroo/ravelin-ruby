@@ -10,6 +10,8 @@ module Ravelin
       :http_body
 
     def initialize(faraday_response)
+      return if faraday_response.body.nil? || faraday_response.body.empty?
+
       data = faraday_response.body.fetch('data', {})
 
       @customer_id  = data['customerId']
