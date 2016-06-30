@@ -15,6 +15,7 @@ module Ravelin
       :telephone_country,
       :location,
       :country,
+      :market,
       :custom
 
     attr_required :customer_id
