@@ -28,7 +28,7 @@ Or install it yourself as:
 
 ### Authentication
 
-First think to do is create a client with your Ravelin API key.
+First thing to do is create a client with your Ravelin API key.
 
 ```ruby
 client = Ravelin::Client.new(api_key: 'sk_test_XXX')
