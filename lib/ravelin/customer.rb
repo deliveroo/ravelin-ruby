@@ -9,12 +9,13 @@ module Ravelin
       :gender,
       :email,
       :email_verified_time,
-      :user_name,
+      :username,
       :telephone,
       :telephone_verified_time,
       :telephone_country,
       :location,
       :country,
+      :market,
       :custom
 
     attr_required :customer_id
