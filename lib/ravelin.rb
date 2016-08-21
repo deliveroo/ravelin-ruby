@@ -21,6 +21,7 @@ require 'ravelin/order'
 require 'ravelin/payment_method'
 require 'ravelin/pre_transaction'
 require 'ravelin/transaction'
+require 'ravelin/voucher'
 require 'ravelin/label'
 
 require 'ravelin/event'
