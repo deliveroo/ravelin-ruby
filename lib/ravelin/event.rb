@@ -34,6 +34,7 @@ module Ravelin
         payment_method: PaymentMethod,
         transaction:    self.name == :pretransaction ? PreTransaction : Transaction,
         label:          Label,
+        voucher:        Voucher,
       }
     end
 
@@ -46,6 +47,8 @@ module Ravelin
       case self.name
         when :customer
           validate_payload_inclusion_of :customer
+        when :voucher
+          validate_payload_inclusion_of :voucher
         when :pretransaction, :transaction
           validate_payload_inclusion_of :order_id, :payment_method_id
         when :login
