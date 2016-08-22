@@ -144,10 +144,10 @@ client.send_event(
   name: :voucher,
   payload: {
     voucher_code: 'TEST123',
-    expiry: 1497484799,
+    expiry: Time.now + 1,
     value: 500,
     currency: "GBP",
-    creation_time: 1497484799,
+    creation_time: Time.now,
     voucher_type: "REFERRAL",
     referrer_id: "1",
     referral_value: 500
