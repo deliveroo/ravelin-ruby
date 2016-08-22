@@ -8,7 +8,7 @@ module Ravelin
       :currency,
       :voucher_type,
       :referral_value,
-      :creation_time
+      :creation_time,
       :custom
 
     attr_required :voucher_code, :referrer_id, :expiry, :value, :currency, :voucher_type, :referral_value, :creation_time
