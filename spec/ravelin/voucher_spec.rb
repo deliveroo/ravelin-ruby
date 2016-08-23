@@ -6,7 +6,7 @@ describe Ravelin::Voucher do
       {
         :voucher_code => 'TEST123',
         :referrer_id => 1,
-        :expiry => Time.now,
+        :expiry => Time.now + 1,
         :value => 10,
         :currency => 'GBP',
         :voucher_type => 'REFERRAL',

@@ -77,9 +77,10 @@ client.send_event(
 * `:login`
 * `:checkout`
 * `:chargeback`
+* `:voucher`
 
 Information about the payload parameters for each event can be found in the
-[Ravelin docs](https://developer.ravelin.com) and by checking out the
+[Ravelin docs](https://developer.ravelin.com) (ravelins voucher docs not released yet) and by checking out the
 `Ravelin::RavelinObject` classes in the gem
 [source code](https://github.com/deliveroo/ravelin-ruby/tree/master/lib).
 
@@ -134,6 +135,22 @@ client.send_event(
         { sku: 'itm_2', quantity: 1 }
       ]
     }
+  }
+)
+
+# Send a voucher event
+
+client.send_event(
+  name: :voucher,
+  payload: {
+    voucher_code: 'TEST123',
+    expiry: Time.now + 1,
+    value: 500,
+    currency: "GBP",
+    creation_time: Time.now,
+    voucher_type: "REFERRAL",
+    referrer_id: "1",
+    referral_value: 500
   }
 )
 ```
