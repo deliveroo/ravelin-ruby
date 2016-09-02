@@ -9,6 +9,7 @@ module Ravelin
       :browser,
       :javascript_enabled,
       :cookies_enabled,
-      :screen_resolution
+      :screen_resolution,
+      :user_agent
   end
 end
