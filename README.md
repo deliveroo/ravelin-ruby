@@ -78,7 +78,7 @@ client.send_event(
 * `:checkout`
 * `:chargeback`
 * `:voucher`
-* `:voucher_redemption'
+* `:voucher_redemption`
 
 Information about the payload parameters for each event can be found in the
 [Ravelin docs](https://developer.ravelin.com) (ravelins voucher & voucher_redemption docs not yet released) and by checking out the
