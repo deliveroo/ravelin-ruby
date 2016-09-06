@@ -13,8 +13,6 @@ describe Ravelin::VoucherRedemption do
         :voucher_type => 'REFERRAL',
         :redemption_time => Time.now,
         :success => true,
-        :failure_source => nil,
-        :failure_reason => nil,
       }
     ) }.to_not raise_exception
   end
