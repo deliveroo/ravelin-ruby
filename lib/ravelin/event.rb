@@ -32,6 +32,7 @@ module Ravelin
         location:       Location,
         order:          Order,
         payment_method: PaymentMethod,
+        voucher_redemption: VoucherRedemption,
         transaction:    self.name == :pretransaction ? PreTransaction : Transaction,
         label:          Label,
         voucher:        Voucher,
