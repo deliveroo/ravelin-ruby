@@ -78,9 +78,10 @@ client.send_event(
 * `:checkout`
 * `:chargeback`
 * `:voucher`
+* `:voucher_redemption'
 
 Information about the payload parameters for each event can be found in the
-[Ravelin docs](https://developer.ravelin.com) (ravelins voucher docs not released yet) and by checking out the
+[Ravelin docs](https://developer.ravelin.com) (ravelins voucher & voucher_redemption docs not yet released) and by checking out the
 `Ravelin::RavelinObject` classes in the gem
 [source code](https://github.com/deliveroo/ravelin-ruby/tree/master/lib).
 
@@ -146,13 +147,54 @@ client.send_event(
     voucher_code: 'TEST123',
     expiry: Time.now + 1,
     value: 500,
-    currency: "GBP",
+    currency: 'GBP',
     creation_time: Time.now,
-    voucher_type: "REFERRAL",
-    referrer_id: "1",
+    voucher_type: 'REFERRAL',
+    referrer_id: '1',
     referral_value: 500
   }
 )
+
+# Send a voucher redemption event
+
+client.send_event(
+  name: :'paymentmethod/voucher',
+  payload: {
+    customer_id: 123983,
+    voucher_redemption: {
+      payment_method_id: 'voucher:12345',
+      voucher_code: 'FOOBAR9835',
+      referrer_id: '1',
+      expiry: Time.now + 1,
+      value: 500,
+      currency: 'GBP,
+      voucher_type: 'REFERRAL',
+      redemption_time: Time.now - 1,
+      success: false,
+      failure_source: :CLIENT, 
+      failure_reason: :EXPIRED
+    }
+  }
+)
+
+client.send_event(
+  name: :'paymentmethod/voucher',
+  payload: {
+    customer_id: 123983,
+    voucher_redemption: {
+      payment_method_id: 'voucher:12345',
+      voucher_code: 'FOOBAR9835',
+      referrer_id: '1',
+      expiry: Time.now + 1,
+      value: 500,
+      currency: 'GBP,
+      voucher_type: 'REFERRAL',
+      redemption_time: Time.now - 1,
+      success: true,
+    }
+  }
+)
+
 ```
 
 ### Send a backfill event
