@@ -165,6 +165,26 @@ describe Ravelin::Client do
     end
   end
 
+  describe '#handle null responses' do
+    let(:event) { double('event', name: :ping, serializable_hash: {}) }
+    let(:client) { described_class.new(api_key: 'abc') }
+
+    before do
+      allow(Ravelin::Event).to receive(:new).and_return(event)
+      stub_request(:post, 'https://api.ravelin.com/v2/ping').
+        and_return(status: status_code, body: "null")
+    end
+
+    context 'HTTP status 400' do
+      let(:status_code) { 200 }
+
+      it "successfull" do
+        expect(client.send_event).to be_a(Ravelin::Response)
+      end
+    end
+  end
+
+
   describe '#handle_error_response' do
     shared_examples 'raises error with' do |error_class|
       it "raises #{error_class} error" do

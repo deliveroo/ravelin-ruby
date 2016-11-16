@@ -1,3 +1,12 @@
+require 'faraday_middleware/response_middleware'
+
+# This is a hack to compensate for Ravelin sending `null` in the response for 200's.
+class FaradayMiddleware::ParseJson
+  define_parser do |body|
+    ::JSON.parse(body) unless body.strip.empty? || body.strip == 'null'
+  end
+end
+
 module Ravelin
   class Client
     API_BASE = 'https://api.ravelin.com'
@@ -36,7 +45,7 @@ module Ravelin
       response = @connection.post(url, payload.to_json)
 
       if response.success?
-        return Response.new(response)
+        Response.new(response)
       else
         handle_error_response(response)
       end
