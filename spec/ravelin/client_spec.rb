@@ -175,10 +175,10 @@ describe Ravelin::Client do
         and_return(status: status_code, body: "null")
     end
 
-    context 'HTTP status 400' do
+    context 'HTTP status 200' do
       let(:status_code) { 200 }
 
-      it "successfull" do
+      it "successful" do
         expect(client.send_event).to be_a(Ravelin::Response)
       end
     end
