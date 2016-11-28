@@ -6,6 +6,8 @@ module Ravelin
       :debit,
       :credit,
       :gateway,
+      :type,
+      :time,
       :custom
 
     attr_required :transaction_id, :currency, :debit, :credit, :gateway

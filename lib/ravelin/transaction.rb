@@ -12,7 +12,9 @@ module Ravelin
       :decline_code,
       :gateway_reference,
       :avs_result_code,
-      :cvv_result_code
+      :cvv_result_code,
+      :type,
+      :time
 
     attr_required :transaction_id,
       :currency,
