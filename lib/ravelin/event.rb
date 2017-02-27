@@ -43,7 +43,7 @@ module Ravelin
 
     def validate_top_level_payload_params
       validate_customer_id_presence_on :order, :paymentmethod,
-        :pretransaction, :transaction, :label
+        :pretransaction, :transaction, :label, :login
       case self.name
         when :customer
           validate_payload_inclusion_of :customer
@@ -53,8 +53,6 @@ module Ravelin
           validate_payload_inclusion_of :'voucher_redemption'
         when :pretransaction, :transaction
           validate_payload_inclusion_of :order_id, :payment_method_id
-        when :login
-          validate_payload_inclusion_of :customer_id, :temp_customer_id
         when :checkout
           validate_payload_inclusion_of :customer, :order,
             :payment_method, :transaction

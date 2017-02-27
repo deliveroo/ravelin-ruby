@@ -19,9 +19,9 @@ describe Ravelin::Event do
 
       it 'left as they are' do
         expect(event.serializable_hash).to eq({
-          'name' => 'John',
-          'timestamp' => 12345
-        })
+            'name' => 'John',
+            'timestamp' => 12345
+          })
       end
     end
 
@@ -30,34 +30,36 @@ describe Ravelin::Event do
 
       it 'converts the Ravelin objects to hash with camelcase keys' do
         expect(event.serializable_hash).to eq({
-          'timestamp' => 12345,
-          'dummy' => { 'name' => 'Fraudster' }
-        })
+            'timestamp' => 12345,
+            'dummy' => { 'name' => 'Fraudster' }
+          })
       end
     end
   end
 
   describe '#validate_top_level_payload_params' do
     context 'customer presence required' do
-      it 'throws ArgumentError with no customer_id or temp_customer_id' do
-        expect {
-          described_class.new(name: :order, payload: {})
-        }.to raise_exception(
-          ArgumentError,
-          /payload missing customer_id or temp_customer_id/
-        )
-      end
+      [:login, :order, :paymentmethod].each do |event|
+        it "throws ArgumentError with no customer_id or temp_customer_id for #{event}" do
+          expect {
+            described_class.new(name: event, payload: {})
+          }.to raise_exception(
+            ArgumentError,
+            /payload missing customer_id or temp_customer_id/
+          )
+        end
 
-      it 'accepts customer_id' do
-        expect {
-          described_class.new(name: :order, payload: { customer_id: 1 })
-        }.to_not raise_exception
-      end
+        it "accepts customer_id for #{event}" do
+          expect {
+            described_class.new(name: event, payload: { customer_id: 1 })
+          }.to_not raise_exception
+        end
 
-      it 'accepts temp_customer_id' do
-        expect {
-          described_class.new(name: :order, payload: { temp_customer_id: 2 })
-        }.to_not raise_exception
+        it "accepts temp_customer_id for #{event}" do
+          expect {
+            described_class.new(name: event, payload: { temp_customer_id: 2 })
+          }.to_not raise_exception
+        end
       end
     end
 
