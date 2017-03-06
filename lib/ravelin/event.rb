@@ -52,7 +52,10 @@ module Ravelin
         when :'paymentmethod/voucher'
           validate_payload_inclusion_of :'voucher_redemption'
         when :pretransaction, :transaction
-          validate_payload_inclusion_of :order_id, :payment_method_id
+          validate_payload_must_include_one_of(
+            :payment_method_id, :payment_method
+          )
+          validate_payload_inclusion_of :order_id
         when :login
           validate_payload_inclusion_of :customer_id, :temp_customer_id
         when :checkout
@@ -74,6 +77,18 @@ module Ravelin
       if missing.any?
         raise ArgumentError.
           new(%Q{payload missing parameters: #{missing.join(', ')}})
+      end
+    end
+
+    def validate_payload_must_include_one_of(*mutually_exclusive_keys)
+      intersection = mutually_exclusive_keys & self.payload.keys
+
+      if intersection.size > 1
+        raise ArgumentError
+          .new(%Q{parameters are mutally exclusive: #{mutually_exclusive_keys.join(', ')}})
+      elsif intersection.size == 0
+        raise ArgumentError
+          .new(%Q{payload must include one of: #{mutually_exclusive_keys.join(', ')}})
       end
     end
 
