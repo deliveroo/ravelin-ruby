@@ -37,6 +37,7 @@ module Ravelin
     attr_accessor :faraday_adapter, :faraday_timeout
 
     def camelize(str)
+      return '3ds' if str == :three_d_secure # hack to get around Ruby not support 3ds an attribute.
       str.to_s.gsub(/_(.)/) { |e| $1.upcase }
     end
 
