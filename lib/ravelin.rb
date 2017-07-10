@@ -20,6 +20,7 @@ require 'ravelin/location'
 require 'ravelin/order'
 require 'ravelin/payment_method'
 require 'ravelin/pre_transaction'
+require 'ravelin/three_d_secure'
 require 'ravelin/transaction'
 require 'ravelin/voucher'
 require 'ravelin/voucher_redemption'
@@ -36,9 +37,10 @@ module Ravelin
   class << self
     attr_accessor :faraday_adapter, :faraday_timeout
 
-    def camelize(str)
-      return '3ds' if str == :three_d_secure # hack to get around Ruby not support 3ds an attribute.
-      str.to_s.gsub(/_(.)/) { |e| $1.upcase }
+    def camelize(key)
+      return '3ds' if key == :three_d_secure
+
+      key.to_s.gsub(/_(.)/) { Regexp.last_match(1).upcase }
     end
 
     def datetime_to_epoch(val)
