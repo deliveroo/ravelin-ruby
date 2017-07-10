@@ -83,12 +83,13 @@ describe Ravelin::Event do
 
     context '3ds support' do
       let(:event) { described_class.new(name: :transaction, payload: payload) }
+      let(:timestamp) { Time.now.to_i }
       let(:three_d_secure) do
         {
-          attemped: Time.now,
-          success: true,
-          start_time: Time.now.to_i,
-          end_time: Time.now.to_i
+          attempted:  true,
+          success:    true,
+          start_time: timestamp,
+          end_time:   timestamp
         }
       end
       let(:payload) do
@@ -110,7 +111,17 @@ describe Ravelin::Event do
       end
 
       it '3ds is included in the output' do
-        expect(event.serializable_hash['transaction']).to include({ '3ds' => three_d_secure })
+        serialized_transaction = event.serializable_hash['transaction']
+        serialized_three_d_secure = {
+          '3ds' =>  {
+            'attempted' => true,
+            'success'   => true,
+            'startTime' => timestamp,
+            'endTime'   => timestamp,
+            'timedOut'  => false
+          }
+        }
+        expect(serialized_transaction).to include(serialized_three_d_secure)
       end
     end
 

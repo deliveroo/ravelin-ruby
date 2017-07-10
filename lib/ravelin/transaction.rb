@@ -26,9 +26,8 @@ module Ravelin
                   :success
 
     def initialize(params)
-      three_d_secure_data = params['3ds']
-      unless three_d_secure_data.nil?
-        self.three_d_secure = three_d_secure_data
+      unless params['3ds'].nil?
+        self.three_d_secure = ThreeDSecure.new(params['3ds'])
         params.delete('3ds')
       end
 
