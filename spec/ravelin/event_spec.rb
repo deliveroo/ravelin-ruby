@@ -81,6 +81,39 @@ describe Ravelin::Event do
       end
     end
 
+    context '3ds support' do
+      let(:event) { described_class.new(name: :transaction, payload: payload) }
+      let(:three_d_secure) do
+        {
+          attemped: Time.now,
+          success: true,
+          start_time: Time.now.to_i,
+          end_time: Time.now.to_i
+        }
+      end
+      let(:payload) do
+        {
+          customer_id: 123,
+          payment_method_id: 123,
+          order_id: 123,
+          transaction: {
+            transaction_id: 123,
+            currency: 'GBP',
+            debit: 100,
+            credit: 0,
+            gateway: 'stripe',
+            gateway_reference: 123,
+            success: true,
+            '3ds' => three_d_secure
+          }
+        }
+      end
+
+      it '3ds is included in the output' do
+        expect(event.serializable_hash['transaction']).to include({ '3ds' => three_d_secure })
+      end
+    end
+
     context 'required mutually exclusive params' do
       let(:payload) do
         {

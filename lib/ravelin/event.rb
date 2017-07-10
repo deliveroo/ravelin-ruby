@@ -11,7 +11,7 @@ module Ravelin
     end
 
     def serializable_hash
-      payload_hash = hash_map(self.payload) do |k, v|
+      payload_hash = hash_map(payload) do |k, v|
         k = Ravelin.camelize(k)
 
         if v.is_a?(Ravelin::RavelinObject)
@@ -33,7 +33,7 @@ module Ravelin
         order:          Order,
         payment_method: PaymentMethod,
         voucher_redemption: VoucherRedemption,
-        transaction:    self.name == :pretransaction ? PreTransaction : Transaction,
+        transaction:    name == :pretransaction ? PreTransaction : Transaction,
         label:          Label,
         voucher:        Voucher,
       }
@@ -44,56 +44,52 @@ module Ravelin
     def validate_top_level_payload_params
       validate_customer_id_presence_on :order, :paymentmethod,
         :pretransaction, :transaction, :label
-      case self.name
-        when :customer
-          validate_payload_inclusion_of :customer
-        when :voucher
-          validate_payload_inclusion_of :voucher
-        when :'paymentmethod/voucher'
-          validate_payload_inclusion_of :'voucher_redemption'
-        when :pretransaction, :transaction
-          validate_payload_must_include_one_of(
-            :payment_method_id, :payment_method
-          )
-          validate_payload_inclusion_of :order_id
-        when :login
-          validate_payload_inclusion_of :customer_id
-        when :checkout
-          validate_payload_inclusion_of :customer, :order,
-            :payment_method, :transaction
+      case name
+      when :customer
+        validate_payload_inclusion_of :customer
+      when :voucher
+        validate_payload_inclusion_of :voucher
+      when :'paymentmethod/voucher'
+        validate_payload_inclusion_of :'voucher_redemption'
+      when :pretransaction, :transaction
+        validate_payload_must_include_one_of(
+          :payment_method_id, :payment_method
+        )
+        validate_payload_inclusion_of :order_id
+      when :login
+        validate_payload_inclusion_of :customer_id
+      when :checkout
+        validate_payload_inclusion_of :customer, :order,
+          :payment_method, :transaction
       end
     end
 
     def validate_customer_id_presence_on(*events)
-      if events.include?(self.name) && !payload_customer_reference_present?
-        raise ArgumentError.
-          new(%q{payload missing customer_id or temp_customer_id parameter})
+      if events.include?(name) && !payload_customer_reference_present?
+        raise ArgumentError, 'payload missing customer_id or temp_customer_id parameter'
       end
     end
 
     def validate_payload_inclusion_of(*required_keys)
-      missing = required_keys - self.payload.keys
+      missing = required_keys - payload.keys
 
       if missing.any?
-        raise ArgumentError.
-          new(%Q{payload missing parameters: #{missing.join(', ')}})
+        raise ArgumentError, "payload missing parameters: #{missing.join(', ')}"
       end
     end
 
     def validate_payload_must_include_one_of(*mutually_exclusive_keys)
-      intersection = mutually_exclusive_keys & self.payload.keys
+      intersection = mutually_exclusive_keys & payload.keys
 
       if intersection.size > 1
-        raise ArgumentError
-          .new(%Q{parameters are mutally exclusive: #{mutually_exclusive_keys.join(', ')}})
-      elsif intersection.size == 0
-        raise ArgumentError
-          .new(%Q{payload must include one of: #{mutually_exclusive_keys.join(', ')}})
+        raise ArgumentError, "parameters are mutally exclusive: #{mutually_exclusive_keys.join(', ')}"
+      elsif intersection.empty?
+        raise ArgumentError, "payload must include one of: #{mutually_exclusive_keys.join(', ')}"
       end
     end
 
     def payload_customer_reference_present?
-      self.payload.keys.any? {|k| %i(customer_id temp_customer_id).include? k }
+      payload.keys.any? { |k| %i[customer_id temp_customer_id].include? k }
     end
 
     def convert_to_epoch(val)
@@ -102,7 +98,7 @@ module Ravelin
       elsif val.is_a?(Integer)
         val
       else
-        raise TypeError.new(%Q{timestamp requires a Time or epoch Integer})
+        raise TypeError, 'timestamp requires a Time or epoch Integer'
       end
     end
 
