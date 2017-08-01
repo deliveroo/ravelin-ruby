@@ -39,6 +39,12 @@ module Ravelin
       post("/v2/backfill/#{event.name}", event.serializable_hash)
     end
 
+    def send_tag(**args)
+      tag = Tag.new(**args)
+
+      post("/v2/tag/customer", tag.serializable_hash)
+    end
+
     private
 
     def post(url, payload)

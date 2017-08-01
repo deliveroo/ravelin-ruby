@@ -27,6 +27,7 @@ require 'ravelin/voucher_redemption'
 require 'ravelin/label'
 
 require 'ravelin/event'
+require 'ravelin/tag'
 require 'ravelin/response'
 require 'ravelin/client'
 
