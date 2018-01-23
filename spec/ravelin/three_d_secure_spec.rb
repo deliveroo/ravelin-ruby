@@ -68,4 +68,46 @@ describe Ravelin::ThreeDSecure do
       end
     end
   end
+
+  context 'when invalid timestamps are sent' do
+    let(:less_than_one_hundred) { 99 }
+
+    let(:params) do
+      {
+        attempted:  true,
+        success:    true,
+        start_time: less_than_one_hundred,
+        end_time:   less_than_one_hundred,
+        timed_out:  false
+      }
+    end
+
+    it 'does not include the timestamps' do
+      expect(subject.serializable_hash).to eql(
+        'attempted' => true,
+        'success'   => true,
+        'timedOut'  => false
+      )
+    end
+  end
+
+  context 'when no timestamps are sent' do
+    let(:params) do
+      {
+        attempted:  false,
+        success:    false,
+        start_time: nil,
+        end_time:   nil,
+        timed_out:  false
+      }
+    end
+
+    it 'does not include the timestamps' do
+      expect(subject.serializable_hash).to eql(
+        'attempted' => false,
+        'success'   => false,
+        'timedOut'  => false
+      )
+    end
+  end
 end
