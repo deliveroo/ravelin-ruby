@@ -7,13 +7,14 @@ module Ravelin
                   :timed_out
 
     def serializable_hash
-      {
+      hash = {
         'attempted' => boolean(attempted),
         'success'   => boolean(success),
-        'startTime' => timestamp(start_time),
-        'endTime'   => timestamp(end_time),
         'timedOut'  => boolean(timed_out)
       }
+      hash['startTime'] = timestamp(start_time) if valid?(start_time)
+      hash['endTime']   = timestamp(end_time)   if valid?(end_time)
+      hash
     end
 
     private
@@ -24,6 +25,10 @@ module Ravelin
 
     def timestamp(time)
       time.to_i
+    end
+
+    def valid?(time)
+      timestamp(time) >= 100
     end
   end
 end
