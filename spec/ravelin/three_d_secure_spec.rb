@@ -6,8 +6,8 @@ describe Ravelin::ThreeDSecure do
     {
       attempted:  true,
       success:    true,
-      start_time: timestamp,
-      end_time:   timestamp
+      start_time: Time.new(2017),
+      end_time:   Time.new(2017)
     }
   end
 
@@ -26,6 +26,27 @@ describe Ravelin::ThreeDSecure do
       )
     end
 
+    context 'when 3DS has not finished yet' do
+      let(:params) do
+        {
+          attempted:  true,
+          success:    false,
+          start_time: timestamp,
+          end_time:   nil,
+          timed_out:  false
+        }
+      end
+
+      it 'does not include the end time' do
+        expect(subject.serializable_hash).to eql(
+          'attempted' => true,
+          'success'   => false,
+          'startTime' => timestamp,
+          'timedOut'  => false
+        )
+      end
+    end
+
     context 'when 3DS has timed out' do
       let(:params) do
         {
@@ -42,7 +63,6 @@ describe Ravelin::ThreeDSecure do
           'attempted' => true,
           'success'   => false,
           'startTime' => timestamp,
-          'endTime'   => 0,
           'timedOut'  => true
         )
       end
