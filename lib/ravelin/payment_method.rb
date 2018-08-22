@@ -20,7 +20,8 @@ module Ravelin
       :country_issued,
       # Only when type = paypal
       :email,
-      :custom
+      :custom,
+      :ewallet
 
     attr_required :payment_method_id, :method_type
   end
