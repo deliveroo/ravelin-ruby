@@ -10,12 +10,23 @@ describe Ravelin::Client do
     end
   end
 
+  let(:client) { described_class.new(api_key: 'abc') }
+
   shared_context 'event setup and stubbing' do
-    let(:client) { described_class.new(api_key: 'abc') }
     let(:event_name) { 'foobar' }
     let(:event_payload) { { id: 'ch-123' } }
     let(:event) do
       double('event', name: event_name, serializable_hash: event_payload)
+    end
+
+    before { allow(client).to receive(:post) }
+  end
+
+  shared_context 'tag setup and stubbing' do
+    let(:tag_name) { 'tagname' }
+    let(:tag_payload) { { tag_names: ['foobar'] } }
+    let(:tag) do
+      double('tag', name: tag_name, serializable_hash: tag_payload)
     end
 
     before { allow(client).to receive(:post) }
@@ -58,6 +69,28 @@ describe Ravelin::Client do
       expect(client).to receive(:post).with("/v2/foobar", { id: 'ch-123' })
 
       client.send_event(score: false)
+    end
+  end
+
+  describe '#send_tag' do
+    include_context 'tag setup and stubbing'
+
+    it 'creates a tag with method arguments' do
+      expect(Ravelin::Tag).to receive(:new).
+          with(payload: {:tag_names=>["foobar"]}).
+          and_return(tag)
+
+      client.send_tag(
+          payload: { tag_names: ['foobar'] }
+          )
+    end
+
+    it 'calls #post with Tag payload' do
+      allow(Ravelin::Tag).to receive(:new) { tag }
+
+      expect(client).to receive(:post).with("/v2/tag/customer", { tag_names: ['foobar'] })
+
+      client.send_tag
     end
   end
 
