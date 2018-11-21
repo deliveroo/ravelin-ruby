@@ -45,10 +45,28 @@ module Ravelin
       post("/v2/tag/customer", tag.serializable_hash)
     end
 
+    def delete_tag(**args)
+      tag = Tag.new(**args)
+      customer_id = tag["customerId"]
+      tags = tag["tagNames"].join("', '")
+
+      delete("/v2/tag/customer?customerId=[#{customer_id}]&tagName=[#{tags}]")
+    end
+
     private
 
     def post(url, payload)
       response = @connection.post(url, payload.to_json)
+
+      if response.success?
+        Response.new(response)
+      else
+        handle_error_response(response)
+      end
+    end
+
+    def delete(url)
+      response = @connection.delete(url)
 
       if response.success?
         Response.new(response)

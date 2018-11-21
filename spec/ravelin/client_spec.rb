@@ -24,7 +24,7 @@ describe Ravelin::Client do
 
   shared_context 'tag setup and stubbing' do
     let(:tag_name) { 'tagname' }
-    let(:tag_payload) { { tag_names: ['foobar'] } }
+    let(:tag_payload) { { tagNames: ['foobar'] } }
     let(:tag) do
       double('tag', name: tag_name, serializable_hash: tag_payload)
     end
@@ -72,28 +72,6 @@ describe Ravelin::Client do
     end
   end
 
-  describe '#send_tag' do
-    include_context 'tag setup and stubbing'
-
-    it 'creates a tag with method arguments' do
-      expect(Ravelin::Tag).to receive(:new).
-          with(payload: {:tag_names=>["foobar"]}).
-          and_return(tag)
-
-      client.send_tag(
-          payload: { tag_names: ['foobar'] }
-          )
-    end
-
-    it 'calls #post with Tag payload' do
-      allow(Ravelin::Tag).to receive(:new) { tag }
-
-      expect(client).to receive(:post).with("/v2/tag/customer", { tag_names: ['foobar'] })
-
-      client.send_tag
-    end
-  end
-
   describe '#send_backfill_event' do
     include_context 'event setup and stubbing'
 
@@ -122,6 +100,32 @@ describe Ravelin::Client do
         client.send_backfill_event(name: :foobar, payload: {})
       }.to raise_exception(ArgumentError, /missing parameters: timestamp/)
     end
+  end
+
+  describe '#send_tag' do
+    include_context 'tag setup and stubbing'
+
+    it 'creates a tag with method arguments' do
+      expect(Ravelin::Tag).to receive(:new).
+          with(payload: {:tagNames=>["foobar"]}).
+          and_return(tag)
+
+      client.send_tag(
+          payload: { tagNames: ['foobar'] }
+      )
+    end
+
+    it 'calls #post with Tag payload' do
+      allow(Ravelin::Tag).to receive(:new) { tag }
+
+      expect(client).to receive(:post).with("/v2/tag/customer", { tagNames: ['foobar'] })
+
+      client.send_tag
+    end
+  end
+
+  describe '#delete_tag' do
+
   end
 
   describe '#post' do
