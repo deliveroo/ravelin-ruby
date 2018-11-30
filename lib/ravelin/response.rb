@@ -13,11 +13,9 @@ module Ravelin
 
     def initialize(faraday_response)
       return if faraday_response.body.nil? || faraday_response.body.empty?
-
-      data = faraday_response.body.fetch('data', {})
-
-      tag(data) if data.key?('tagNames')
-      event(data) if data.key?('action')
+      response_body = faraday_response.body
+      tag(response_body) if response_body.key?('tagNames')
+      event(response_body) if response_body.key?('data')
 
       @http_status  = faraday_response.status
       @http_body    = faraday_response.body
@@ -25,7 +23,9 @@ module Ravelin
 
     private
 
-    def event(data)
+    def event(response_body)
+      data = response_body.fetch('data', {})
+
       @customer_id  = data['customerId']
       @action       = data['action']
       @score        = data['score']
@@ -35,9 +35,9 @@ module Ravelin
       @customer_id  = data['customerId']
     end
 
-    def tag(data)
-      @tag_names    = data['tagNames']
-      @label        = data['label']
+    def tag(response_body)
+      @tag_names    = response_body['tagNames']
+      @label        = response_body['label']
     end
   end
 end
