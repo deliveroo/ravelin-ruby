@@ -6,6 +6,8 @@ module Ravelin
       :score_id,
       :source,
       :comment,
+      :label,
+      :tag_names,
       :http_status,
       :http_body
 
@@ -14,6 +16,16 @@ module Ravelin
 
       data = faraday_response.body.fetch('data', {})
 
+      tag(data) if data.key?('tagNames')
+      event(data) if data.key?('action')
+
+      @http_status  = faraday_response.status
+      @http_body    = faraday_response.body
+    end
+
+    private
+
+    def event(data)
       @customer_id  = data['customerId']
       @action       = data['action']
       @score        = data['score']
@@ -21,8 +33,11 @@ module Ravelin
       @source       = data['source']
       @comment      = data['comment']
       @customer_id  = data['customerId']
-      @http_status  = faraday_response.status
-      @http_body    = faraday_response.body
+    end
+
+    def tag(data)
+      @tag_names    = data['tagNames']
+      @label        = data['label']
     end
   end
 end
