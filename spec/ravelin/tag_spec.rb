@@ -4,7 +4,7 @@ describe Ravelin::Tag do
   let(:tag) { described_class.new(payload: {}) }
 
   describe '#serializable_hash' do
-    let(:payload) { { customer_id: 1234, tag_names: %w(tester staff) } }
+    let(:payload) { { "customer_id": 1234, "tag_names": %w(tester staff) } }
 
     before { allow(tag).to receive(:payload).and_return(payload) }
 

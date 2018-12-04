@@ -2,12 +2,14 @@ module Ravelin
   class Response
     attr_reader :customer_id,
       :action,
+      :client_reviewed_status,
       :score,
       :score_id,
       :source,
       :comment,
       :label,
       :tag_names,
+      :tags,
       :http_status,
       :http_body
 
@@ -36,8 +38,10 @@ module Ravelin
     end
 
     def tag(response_body)
-      @tag_names    = response_body['tagNames']
-      @label        = response_body['label']
+      @tag_names              = response_body['tagNames']
+      @label                  = response_body['label'] if response_body.key?('label')
+      @tags                   = response_body['tags'] if response_body.key?('tags')
+      @client_reviewed_status = response_body['clientReviewedStatus'] if response_body.key?('clientReviewedStatus')
     end
   end
 end
