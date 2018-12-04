@@ -23,8 +23,8 @@ describe Ravelin::Client do
   end
 
   shared_context 'tag setup and stubbing' do
-    let(:tag_name) { 'tagname' }
-    let(:tag_payload) { { customerId: '123', tagNames: ['foo', 'bar'] } }
+    let(:tag_name) { :tagname }
+    let(:tag_payload) { { "customerId" => '123', "tagNames" => ['foo', 'bar'] } }
     let(:tag) do
       double('tag', name: tag_name, serializable_hash: tag_payload)
     end
@@ -121,8 +121,8 @@ describe Ravelin::Client do
 
       expect(client).to receive(:post).with('/v2/tag/customer',
           {
-              customerId: '123',
-              tagNames: ['foo', 'bar']
+              "customerId" => '123',
+              "tagNames" => ['foo', 'bar']
           }
       )
 

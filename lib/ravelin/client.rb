@@ -47,8 +47,8 @@ module Ravelin
 
     def delete_tag(**args)
       tag = Tag.new(**args).serializable_hash
-      customer_id = tag[:customerId]
-      tags = tag[:tagNames].join(",")
+      customer_id = tag["customerId"]
+      tags = tag["tagNames"].join(",")
 
       delete("/v2/tag/customer?customerId=[#{customer_id}]&tagName=[#{tags}]")
     end
