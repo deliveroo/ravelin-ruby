@@ -30,11 +30,8 @@ describe Ravelin::Response do
     context 'when a tag is sent' do
       let(:faraday_response) do
         double('faraday', status: 200, body: {
-            'data' => {
-                'customerId'  => 'cus-123',
-                'tagNames'    => ['credit_abuse'],
-                'label'       => 'GENUINE'
-            }
+            'tagNames'    => ['credit_abuse'],
+            'label'       => 'GENUINE'
         })
       end
 
