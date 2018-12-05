@@ -133,10 +133,22 @@ describe Ravelin::Client do
   describe '#delete_tag' do
     include_context 'tag setup and stubbing'
 
-    it 'calls #delete with Tag payload' do
-      allow(Ravelin::Tag).to receive(:new) { tag }
-      expect(client).to receive(:delete).with('/v2/tag/customer?customerId=[123]&tagName=[foo,bar]')
-      client.delete_tag
+    context 'when deleting one tag' do
+      let(:tag_payload) { { "customerId" => '123', "tagNames" => ['foo'] } }
+
+      it 'calls #delete with Tag payload' do
+        allow(Ravelin::Tag).to receive(:new) { tag }
+        expect(client).to receive(:delete).with('/v2/tag/customer?customerId=123&tagName=foo')
+        client.delete_tag
+      end
+    end
+
+    context 'when deleting multiple tags' do
+      it 'calls #delete with Tag payload' do
+        allow(Ravelin::Tag).to receive(:new) { tag }
+        expect(client).to receive(:delete).with('/v2/tag/customer?customerId=123&tagName=foo,bar')
+        client.delete_tag
+      end
     end
   end
 
