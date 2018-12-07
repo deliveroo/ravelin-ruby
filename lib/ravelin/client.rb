@@ -49,8 +49,15 @@ module Ravelin
       tag = Tag.new(**args).serializable_hash
       customer_id = tag["customerId"]
       tags = tag["tagNames"].join(",")
-      
+
       delete("/v2/tag/customer?customerId=#{customer_id}&tagName=#{tags}")
+    end
+
+    def get_tag(**args)
+      tag = Tag.new(**args).serializable_hash
+      customer_id = tag["customerId"]
+
+      get("/v2/tag/customer?customerId=#{customer_id}")
     end
 
     private
@@ -67,6 +74,16 @@ module Ravelin
 
     def delete(url)
       response = @connection.delete(url)
+
+      if response.success?
+        Response.new(response)
+      else
+        handle_error_response(response)
+      end
+    end
+
+    def get(url)
+      response = @connection.get(url)
 
       if response.success?
         Response.new(response)
