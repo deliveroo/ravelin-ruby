@@ -152,6 +152,20 @@ describe Ravelin::Client do
     end
   end
 
+  describe '#get_tag' do
+    include_context 'tag setup and stubbing'
+
+    context 'when deleting one tag' do
+      let(:tag_payload) { { "customerId" => '123' } }
+
+      it 'calls #get with customer id' do
+        allow(Ravelin::Tag).to receive(:new) { tag }
+        expect(client).to receive(:get).with('/v2/tag/customer?customerId=123')
+        client.get_tag
+      end
+    end
+  end
+
   describe '#post' do
     let(:client) { described_class.new(api_key: 'abc') }
     let(:event) do
@@ -220,6 +234,79 @@ describe Ravelin::Client do
             with(kind_of(Faraday::Response))
 
           client.send_event
+        end
+      end
+    end
+  end
+
+  describe '#get' do
+    let(:client) { described_class.new(api_key: 'abc') }
+    let(:tag) do
+      double('tag', name: 'ping', serializable_hash: { name: 'value' })
+    end
+
+    before do
+      allow(Ravelin::Tag).to receive(:new).and_return(tag)
+    end
+
+    it 'calls Ravelin with correct headers and body' do
+      stub = stub_request(:get, 'https://api.ravelin.com/v2/ping').
+          with(
+              headers: { 'Authorization' => 'token abc' },
+              body: { name: 'value' }.to_json,
+              ).and_return(
+          headers: { 'Content-Type' => 'application/json' },
+          body: '{}'
+      )
+
+      client.get_tag
+
+      expect(stub).to have_been_requested
+    end
+
+    context 'response' do
+      before do
+        stub_request(:get, 'https://api.ravelin.com/v2/ping').
+            to_return(
+                status: response_status,
+                body: body
+            )
+      end
+
+      context 'successful' do
+        shared_examples 'successful request' do
+          it 'returns the response' do
+            expect(client.get_tag).to be_a(Ravelin::Response)
+          end
+
+          it "not treated as an error" do
+            expect(client).to_not receive(:handle_error_response)
+
+            client.get_tag
+          end
+        end
+
+        context 'when the response code is 200' do
+          let(:response_status) { 200 }
+          let(:body) { '{}' }
+          it_behaves_like 'successful request'
+        end
+
+        context 'when the response code is 200' do
+          let(:response_status) { 204 }
+          let(:body) { '' }
+          it_behaves_like 'successful request'
+        end
+      end
+
+      context 'error' do
+        let(:response_status) { 400 }
+        let(:body) { '{}' }
+        it 'handles error response' do
+          expect(client).to receive(:handle_error_response).
+              with(kind_of(Faraday::Response))
+
+          client.get_tag
         end
       end
     end
