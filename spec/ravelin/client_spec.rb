@@ -161,7 +161,7 @@ describe Ravelin::Client do
 
       it 'calls #get with customer id' do
         allow(Ravelin::Tag).to receive(:new) { tag }
-        expect(client).to receive(:get).with('/v2/tag/customer?customerId=123')
+        expect(client).to receive(:get).with('/v2/tag/customer/123')
         client.get_tag
       end
     end
@@ -323,7 +323,7 @@ describe Ravelin::Client do
     end
 
     it 'calls Ravelin with correct headers and body' do
-      stub = stub_request(:get, 'https://api.ravelin.com/v2/tag/customer?customerId=123').
+      stub = stub_request(:get, 'https://api.ravelin.com/v2/tag/customer/123').
           with(
               headers: { 'Authorization' => 'token abc' }
           ).and_return(
@@ -338,7 +338,7 @@ describe Ravelin::Client do
 
     context 'response' do
       before do
-        stub_request(:get, 'https://api.ravelin.com/v2/tag/customer?customerId=123').
+        stub_request(:get, 'https://api.ravelin.com/v2/tag/customer/123').
             to_return(
                 status: response_status,
                 body: body

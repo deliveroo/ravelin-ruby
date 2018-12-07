@@ -57,7 +57,7 @@ module Ravelin
       tag = Tag.new(**args).serializable_hash
       customer_id = tag["customerId"]
 
-      get("/v2/tag/customer?customerId=#{customer_id}")
+      get("/v2/tag/customer/#{customer_id}")
     end
 
     private
