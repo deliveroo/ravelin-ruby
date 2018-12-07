@@ -31,6 +31,7 @@ describe Ravelin::Client do
 
     before { allow(client).to receive(:post) }
     before { allow(client).to receive(:delete) }
+    before { allow(client).to receive(:get) }
   end
 
   describe '#send_event' do
@@ -239,10 +240,10 @@ describe Ravelin::Client do
     end
   end
 
-  describe '#get' do
+  describe '#delete' do
     let(:client) { described_class.new(api_key: 'abc') }
     let(:tag) do
-      double('tag', name: 'ping', serializable_hash: { name: 'value' })
+      double('tag', name: 'ping', serializable_hash: { "customerId" => '123', "tagNames" => ['foo', 'bar'] })
     end
 
     before do
@@ -250,11 +251,82 @@ describe Ravelin::Client do
     end
 
     it 'calls Ravelin with correct headers and body' do
-      stub = stub_request(:get, 'https://api.ravelin.com/v2/ping').
+      stub = stub_request(:delete, 'https://api.ravelin.com/v2/tag/customer?customerId=123&tagName=foo,bar').
           with(
-              headers: { 'Authorization' => 'token abc' },
-              body: { name: 'value' }.to_json,
-              ).and_return(
+              headers: { 'Authorization' => 'token abc' }
+          ).and_return(
+          headers: { 'Content-Type' => 'application/json' },
+          body: '{}'
+      )
+
+      client.delete_tag
+
+      expect(stub).to have_been_requested
+    end
+
+    context 'response' do
+      before do
+        stub_request(:delete, 'https://api.ravelin.com/v2/tag/customer?customerId=123&tagName=foo,bar').
+            to_return(
+                status: response_status,
+                body: body
+            )
+      end
+
+      context 'successful' do
+        shared_examples 'successful request' do
+          it 'returns the response' do
+            expect(client.delete_tag).to be_a(Ravelin::Response)
+          end
+
+          it "not treated as an error" do
+            expect(client).to_not receive(:handle_error_response)
+
+            client.delete_tag
+          end
+        end
+
+        context 'when the response code is 200' do
+          let(:response_status) { 200 }
+          let(:body) { '{}' }
+          it_behaves_like 'successful request'
+        end
+
+        context 'when the response code is 200' do
+          let(:response_status) { 204 }
+          let(:body) { '' }
+          it_behaves_like 'successful request'
+        end
+      end
+
+      context 'error' do
+        let(:response_status) { 400 }
+        let(:body) { '{}' }
+        it 'handles error response' do
+          expect(client).to receive(:handle_error_response).
+              with(kind_of(Faraday::Response))
+
+          client.delete_tag
+        end
+      end
+    end
+  end
+
+  describe '#get' do
+    let(:client) { described_class.new(api_key: 'abc') }
+    let(:tag) do
+      double('tag', name: 'ping', serializable_hash: { "customerId" => '123', "tagNames" => ['foo', 'bar'] })
+    end
+
+    before do
+      allow(Ravelin::Tag).to receive(:new).and_return(tag)
+    end
+
+    it 'calls Ravelin with correct headers and body' do
+      stub = stub_request(:get, 'https://api.ravelin.com/v2/tag/customer?customerId=123').
+          with(
+              headers: { 'Authorization' => 'token abc' }
+          ).and_return(
           headers: { 'Content-Type' => 'application/json' },
           body: '{}'
       )
@@ -266,7 +338,7 @@ describe Ravelin::Client do
 
     context 'response' do
       before do
-        stub_request(:get, 'https://api.ravelin.com/v2/ping').
+        stub_request(:get, 'https://api.ravelin.com/v2/tag/customer?customerId=123').
             to_return(
                 status: response_status,
                 body: body
