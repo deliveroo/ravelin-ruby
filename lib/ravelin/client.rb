@@ -11,10 +11,11 @@ module Ravelin
   class Client
     API_BASE = 'https://api.ravelin.com'
 
-    def initialize(api_key:)
+    def initialize(api_key:, additional_scoring: false)
       @api_key = api_key
+      additional_scoring ? options = faraday_options_merge : options = faraday_options
 
-      @connection = Faraday.new(API_BASE, faraday_options) do |conn|
+      @connection = Faraday.new(API_BASE, options) do |conn|
         conn.response :json, context_type: /\bjson$/
         conn.adapter Ravelin.faraday_adapter
       end
@@ -107,13 +108,22 @@ module Ravelin
 
     def faraday_options
       {
-        request: { timeout: Ravelin.faraday_timeout },
-        headers: {
-          'Authorization' => "token #{@api_key}",
-          'Content-Type'  => 'application/json; charset=utf-8'.freeze,
-          'User-Agent'    => "Ravelin RubyGem/#{Ravelin::VERSION}".freeze
-        }
+          request: { timeout: Ravelin.faraday_timeout },
+          headers: {
+              'Authorization' => "token #{@api_key}",
+              'Content-Type'  => 'application/json; charset=utf-8'.freeze,
+              'User-Agent'    => "Ravelin RubyGem/#{Ravelin::VERSION}".freeze
+          }
       }
+    end
+
+    # Enable v2/scoring endpoint to return triggered rules, scoring thresholds, market scored in, and connected to fraud.
+    def faraday_additional
+      { headers: {'Accept' => 'application/vnd.ravelin.score.v2+json'} }
+    end
+
+    def faraday_options_merge
+      faraday_options.merge(faraday_additional) {|_, a_val, b_val| a_val.merge b_val}
     end
   end
 end
