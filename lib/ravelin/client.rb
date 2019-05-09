@@ -11,8 +11,11 @@ module Ravelin
   class Client
     API_BASE = 'https://api.ravelin.com'
 
-    def initialize(api_key:)
+    def initialize(api_key:, api_version: 2)
       @api_key = api_key
+
+      raise ArgumentError.new("api_version must be 2 or 3") unless [2,3].include? api_version
+      @api_version = api_version
 
       @connection = Faraday.new(API_BASE, faraday_options) do |conn|
         conn.response :json, context_type: /\bjson$/
@@ -26,7 +29,7 @@ module Ravelin
 
       score_param = score ? "?score=true" : nil
 
-      post("/v2/#{event.name}#{score_param}", event.serializable_hash)
+      post("/v#{@api_version}/#{event.name}#{score_param}", event.serializable_hash)
     end
 
     def send_backfill_event(**args)
@@ -36,13 +39,13 @@ module Ravelin
 
       event = Event.new(**args)
 
-      post("/v2/backfill/#{event.name}", event.serializable_hash)
+      post("/v#{@api_version}/backfill/#{event.name}", event.serializable_hash)
     end
 
     def send_tag(**args)
       tag = Tag.new(**args)
 
-      post("/v2/tag/customer", tag.serializable_hash)
+      post("/v#{@api_version}/tag/customer", tag.serializable_hash)
     end
 
     def delete_tag(**args)
@@ -50,19 +53,21 @@ module Ravelin
       customer_id = tag["customerId"]
       tags = tag["tagNames"].join(",")
 
-      delete("/v2/tag/customer?customerId=#{customer_id}&tagName=#{tags}")
+      delete("/v#{@api_version}/tag/customer?customerId=#{customer_id}&tagName=#{tags}")
     end
 
     def get_tag(**args)
       tag = Tag.new(**args).serializable_hash
       customer_id = tag["customerId"]
 
-      get("/v2/tag/customer/#{customer_id}")
+      get("/v#{@api_version}/tag/customer/#{customer_id}")
     end
 
     private
 
     def post(url, payload)
+      p url
+      p payload.to_json
       response = @connection.post(url, payload.to_json)
 
       if response.success?

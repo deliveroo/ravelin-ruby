@@ -26,11 +26,14 @@ module Ravelin
 
     def object_classes
       {
+        authentication_mechanism: AuthenticationMechanism,
         chargeback:     Chargeback,
         customer:       Customer,
         device:         Device,
         location:       Location,
+        login:          Login,
         order:          Order,
+        password:       Password,
         payment_method: PaymentMethod,
         voucher_redemption: VoucherRedemption,
         transaction:    name == :pretransaction ? PreTransaction : Transaction,
@@ -108,6 +111,9 @@ module Ravelin
         v = Ravelin.convert_ids_to_strings(k, v)
 
         if v.is_a?(Hash) && klass = object_classes[k]
+          p k
+          p v
+          p klass
           [k, klass.new(v)]
         else
           [k, v]
