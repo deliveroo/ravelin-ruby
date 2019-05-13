@@ -14,6 +14,7 @@ require 'ravelin/errors/invalid_failure_reason_error'
 
 require 'ravelin/ravelin_object'
 require 'ravelin/authentication_mechanism'
+require 'ravelin/ato_login'
 require 'ravelin/chargeback'
 require 'ravelin/customer'
 require 'ravelin/device'
