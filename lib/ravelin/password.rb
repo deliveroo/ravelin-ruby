@@ -2,8 +2,7 @@ require 'digest'
 
 module Ravelin
   class Password < RavelinObject
-    attr_accessor :success, :failure_reason
-    attr_reader :password_hashed
+    attr_accessor :success, :failure_reason, :password_hashed
     attr_required :success
 
     # Alternative interface, because when the attr is called "password_hashed",
