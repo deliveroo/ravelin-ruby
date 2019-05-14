@@ -3,13 +3,13 @@ require 'spec_helper'
 describe Ravelin::AtoLogin do
   let(:login_hash) do
     {
-      "username": "big.jim@deliveroo.invalid",
-      "customer_id": 123,
-      "success": true,
-      "authentication_mechanism": {
-        "password": {
-          "password": "lol",
-          "success": true
+      username: "big.jim@deliveroo.invalid",
+      customer_id: 123,
+      success: true,
+      authentication_mechanism: {
+        password: {
+          password: "lol",
+          success: true
         }
       }
     }

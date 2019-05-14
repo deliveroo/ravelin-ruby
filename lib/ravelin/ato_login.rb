@@ -4,10 +4,10 @@ module Ravelin
       :device,
       :location
 
+    attr_required :login
+
     def login=(l)
       @login = Ravelin::Login.new(l)
     end
-
-    attr_required :login
   end
 end

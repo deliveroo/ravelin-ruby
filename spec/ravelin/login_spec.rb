@@ -4,13 +4,13 @@ describe Ravelin::Login do
   subject do
     described_class.new(
       {
-        "username": "big.jim@deliveroo.invalid",
-        "customer_id": 123,
-        "success": true,
-        "authentication_mechanism": {
-          "password": {
-            "password": "lol",
-            "success": true
+        username: "big.jim@deliveroo.invalid",
+        customer_id: 123,
+        success: true,
+        authentication_mechanism: {
+          password: {
+            password: "lol",
+            success: true
           }
         }
       }

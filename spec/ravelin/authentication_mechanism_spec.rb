@@ -4,9 +4,9 @@ describe Ravelin::AuthenticationMechanism do
   subject do
     described_class.new(
       {
-        "password": {
-          "password": "lol",
-          "success": true
+        password: {
+          password: "lol",
+          success: true
         }
       }
     )

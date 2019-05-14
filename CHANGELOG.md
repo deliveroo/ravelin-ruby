@@ -1,3 +1,11 @@
+# 0.1.19
+
+Add support for Account Takeover API
+
+# 0.1.9
+
+Added support for tags.
+
 # 0.1.6
 
 Fix validation to not require payment_method_id if payment_method provided
@@ -12,11 +20,3 @@ Add missing fields to Pretransaction Object
 
 Ravelin sends the work `null` in responses if there are no changes.  This causes JSON.parse to fail.
 
-
-# 0.1.9
-
-Added support for tags.
-
-# 0.1.19
-
-Add support for Account Takeover API
