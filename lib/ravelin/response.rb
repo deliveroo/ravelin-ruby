@@ -1,6 +1,7 @@
 module Ravelin
   class Response
     attr_reader :customer_id,
+      :ato,
       :action,
       :client_reviewed_status,
       :score,
@@ -28,7 +29,7 @@ module Ravelin
     def event(response_body)
       data = response_body.fetch('data', {})
 
-      @customer_id  = data['customerId']
+      @ato          = data['ato']
       @action       = data['action']
       @score        = data['score']
       @score_id     = data['scoreId']
