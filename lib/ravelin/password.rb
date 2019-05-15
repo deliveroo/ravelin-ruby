@@ -20,7 +20,7 @@ module Ravelin
     def validate
       super
       if !success && !FAILURE_REASONS.include?(failure_reason)
-        raise InvalidFailureReasonError.new("Failure reason value must be one of #{FAILURE_REASONS.join(', ')}")
+        raise ArgumentError.new("Failure reason value must be one of #{FAILURE_REASONS.join(', ')}")
       end
     end
   end

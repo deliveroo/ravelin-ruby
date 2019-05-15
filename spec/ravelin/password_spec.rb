@@ -24,6 +24,6 @@ describe Ravelin::Password do
 
   context 'fails if the failure reason is not in the list of accepted reasons' do
     subject { described_class.new(password: 'qwerty123', success: false, failure_reason: 'lol') }
-    it { expect { subject }.to raise_error(Ravelin::InvalidFailureReasonError) }
+    it { expect { subject }.to raise_error(ArgumentError) }
   end
 end

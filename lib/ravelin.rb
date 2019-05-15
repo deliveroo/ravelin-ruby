@@ -10,7 +10,6 @@ require 'ravelin/errors/invalid_request_error'
 require 'ravelin/errors/authentication_error'
 require 'ravelin/errors/rate_limit_error'
 require 'ravelin/errors/invalid_label_value_error'
-require 'ravelin/errors/invalid_failure_reason_error'
 
 require 'ravelin/ravelin_object'
 require 'ravelin/authentication_mechanism'
