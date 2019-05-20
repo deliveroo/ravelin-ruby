@@ -1,6 +1,11 @@
+# 0.1.20
+
+Make customer_id in ato api optional, since the customer may not exist
+
+
 # 0.1.19
 
-Add support for Account Takeover API
+add support for account takeover api
 
 # 0.1.9
 
