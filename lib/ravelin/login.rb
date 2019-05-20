@@ -5,7 +5,7 @@ module Ravelin
       :success,
       :authentication_mechanism
 
-    attr_required :username, :customer_id, :success, :authentication_mechanism
+    attr_required :username, :success, :authentication_mechanism
 
     def authentication_mechanism=(authm)
       @authentication_mechanism = Ravelin::AuthenticationMechanism.new(authm)
