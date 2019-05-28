@@ -66,9 +66,6 @@ module Ravelin
     private
 
     def post(url, payload)
-      p url
-      require 'pp'
-      pp payload
       response = @connection.post(url, payload.to_json)
 
       if response.success?
