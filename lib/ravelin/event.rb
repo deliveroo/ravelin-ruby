@@ -61,8 +61,10 @@ module Ravelin
         )
         validate_payload_inclusion_of :order_id
       when :checkout
-        validate_payload_inclusion_of :customer, :order,
-          :payment_method, :transaction
+        validate_payload_must_include_one_of(
+          :payment_method_id, :payment_method
+        )
+        validate_payload_inclusion_of :customer, :order
       end
     end
 
