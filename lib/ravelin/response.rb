@@ -22,7 +22,7 @@ module Ravelin
       response_body = faraday_response.body
       tag(response_body) if response_body.key?('tagNames')
       event(response_body) if response_body.key?('data')
-      check(response_body['credentialStatus']) if response_body.key?('credentialStatus')
+      extract_credential_status(response_body['credentialStatus']) if response_body.key?('credentialStatus')
 
       @http_status  = faraday_response.status
       @http_body    = faraday_response.body
@@ -49,9 +49,9 @@ module Ravelin
       @client_reviewed_status = response_body['clientReviewedStatus'] if response_body.key?('clientReviewedStatus')
     end
 
-    def check(credential_check)
-      @username_breached = credential_check['usernameBreached']
-      @password_breached = credential_check['passwordBreached']
+    def extract_credential_status(credential_status)
+      @username_breached = credential_status['usernameBreached']
+      @password_breached = credential_status['passwordBreached']
     end
 
   end
