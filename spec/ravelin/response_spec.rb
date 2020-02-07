@@ -13,10 +13,6 @@ describe Ravelin::Response do
                 'scoreId'     => 'scr-123',
                 'source'      => 'detective-fraud',
                 'comment'     => 'Looks pretty sketchy'
-            },
-            'credentialStatus' => {
-                'usernameBreached' => true,
-                'passwordBreached' => false
             }
         })
       end
@@ -28,8 +24,6 @@ describe Ravelin::Response do
         expect(response.score_id).to eq('scr-123')
         expect(response.source).to eq('detective-fraud')
         expect(response.comment).to eq('Looks pretty sketchy')
-        expect(response.username_breached).to eq(true)
-        expect(response.password_breached).to eq(false)
       end
     end
 
@@ -48,6 +42,25 @@ describe Ravelin::Response do
         expect(response.label).to eq('GENUINE')
         expect(response.tags).to eq('1234abc')
         expect(response.client_reviewed_status).to eq(-1)
+      end
+    end
+
+    context 'when a credentialStatus is sent' do
+      let(:faraday_response) do
+        double('faraday', status: 200, body: {
+            'credentialStatus' => {
+                'usernameBreached' => true,
+                'passwordBreached' => false
+            }
+        })
+      end
+
+      it 'sets the username breached attribute from the response' do
+        expect(response.username_breached).to eq(true)
+      end
+
+      it 'sets the username breached attribute from the response' do
+        expect(response.password_breached).to eq(false)
       end
     end
   end
