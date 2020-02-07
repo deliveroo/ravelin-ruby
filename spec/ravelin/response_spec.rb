@@ -13,6 +13,10 @@ describe Ravelin::Response do
                 'scoreId'     => 'scr-123',
                 'source'      => 'detective-fraud',
                 'comment'     => 'Looks pretty sketchy'
+            },
+            'credentialStatus' => {
+                'usernameBreached' => true,
+                'passwordBreached' => false
             }
         })
       end
@@ -24,6 +28,8 @@ describe Ravelin::Response do
         expect(response.score_id).to eq('scr-123')
         expect(response.source).to eq('detective-fraud')
         expect(response.comment).to eq('Looks pretty sketchy')
+        expect(response.username_breached).to eq(true)
+        expect(response.password_breached).to eq(false)
       end
     end
 
