@@ -174,6 +174,26 @@ describe Ravelin::Event do
 
       end
     end
+
+    context 'account reclamation' do
+      it 'throws ArgumentError with missing payload parameters' do
+        expect {
+          described_class.new(name: :ato_reclaim, payload: {})
+        }.to raise_exception(
+                 ArgumentError,
+                 /payload missing parameters: customers/
+             )
+      end
+
+      it 'is executed cleanly with required payload parameters' do
+        expect {
+          described_class.new(
+            name: :ato_reclaim,
+            payload: { customers: [{customer_id: "12345", method: "PasswordReset"}], source: "ATO" }
+          )
+        }.to_not raise_exception
+      end
+    end
   end
 
   describe '#convert_to_epoch' do
