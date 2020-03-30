@@ -1,6 +1,10 @@
+# 0.1.22
+
+Add support for ATO reclaim API
+
 # 0.1.21
 
-Remove debugging left in accidently
+Remove debugging left in accidentally
 
 # 0.1.20
 
