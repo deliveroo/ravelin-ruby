@@ -30,6 +30,7 @@ module Ravelin
         authentication_mechanism: AuthenticationMechanism,
         chargeback:     Chargeback,
         customer:       Customer,
+        ato_reclaim:    AtoReclaim,
         device:         Device,
         location:       Location,
         login:          Login,
@@ -63,6 +64,8 @@ module Ravelin
       when :checkout
         validate_payload_inclusion_of :customer, :order,
           :payment_method, :transaction
+      when :reclaim
+        validate_payload_inclusion_of :customers, :source
       end
     end
 
@@ -122,6 +125,7 @@ module Ravelin
         payment_method: :paymentmethod,
         pre_transaction: :pretransaction,
         ato_login: :login,
+        ato_reclaim: :reclaim,
         label: 'label/customer'.to_sym
       }
 
