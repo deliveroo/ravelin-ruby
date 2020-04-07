@@ -21,7 +21,7 @@ module Ravelin
         end
       end
 
-      payload_hash.merge('timestamp' => timestamp)
+      payload_hash.merge('timestamp' => format_timestamp(timestamp))
     end
 
     def object_classes
@@ -44,6 +44,17 @@ module Ravelin
       }
     end
 
+    def format_timestamp(timestamp)
+      case name
+      when :login
+        timestamp * 1000
+      when :reclaim
+        Time.at(timestamp).utc.to_datetime.to_s
+      else
+        timestamp
+      end
+    end
+
     private
 
     def validate_top_level_payload_params
@@ -64,6 +75,8 @@ module Ravelin
       when :checkout
         validate_payload_inclusion_of :customer, :order,
           :payment_method, :transaction
+      when :login
+        validate_payload_inclusion_of :login
       when :reclaim
         validate_payload_inclusion_of :customers, :source
       end
