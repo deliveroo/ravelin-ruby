@@ -1,3 +1,10 @@
+# 0.1.24
+
+Fix date formatting for events:
+* ATO Login events provide Unix timestamps with milliseconds 
+* ATO Reclaim events provide timestamps in RFC3339 format
+* All other events provide Unix timestamps
+
 # 0.1.23
 
 Add support for ATO reclaim API
