@@ -175,7 +175,92 @@ describe Ravelin::Event do
       end
     end
 
-    context 'ato login' do
+    context 'v2 login event' do
+      let(:payload) {
+        {
+          username: "big.jim@deliveroo.invalid",
+          customer_id: 123,
+          success: true,
+          authentication_mechanism: {
+            password: {
+              password: "lol",
+              success: true
+            }
+          }
+        }
+      }
+
+      it 'throws ArgumentError with missing payload parameters' do
+        expect {
+          described_class.new(
+              name: :login,
+              payload: { }
+          )
+        }.to raise_exception(
+                 ArgumentError,
+                 /payload missing parameters: username, success, authentication_mechanism/
+        )
+      end
+
+      it 'is executed cleanly with required payload parameters' do
+        expect {
+          described_class.new(
+            name: :login,
+            payload: payload
+          )
+        }.to_not raise_exception
+      end
+
+      it 'it generates the correct serializable hash' do
+        output = described_class.new(
+            name: :login,
+            payload: payload,
+            timestamp: 1586283630
+        ).serializable_hash
+
+        expect(output).to eq(
+          {
+            "authenticationMechanism" => {
+              "password" => {
+                "passwordHashed" => "07123e1f482356c415f684407a3b8723e10b2cbbc0b8fcd6282c49d37c9c1abc",
+                "success" => true
+              }
+            },
+            "customerId" => "123",
+            "success" => true,
+            "username" => "big.jim@deliveroo.invalid",
+            "timestamp" => 1586283630
+          }
+        )
+      end
+
+      it 'includes the correct event name' do
+        expect(
+          described_class.new(
+            name: :login,
+            payload: payload
+          ).name).to eq(:login)
+      end
+
+    end
+
+    context 'v3 login event' do
+      let(:payload) {
+        {
+          login: {
+            username: "big.jim@deliveroo.invalid",
+            customer_id: 123,
+            success: true,
+            authentication_mechanism: {
+              password: {
+                password: "lol",
+                success: true
+              }
+            }
+          }
+        }
+      }
+
       it 'throws ArgumentError with missing payload parameters' do
         expect {
           described_class.new(
@@ -192,19 +277,7 @@ describe Ravelin::Event do
         expect {
           described_class.new(
             name: :ato_login,
-            payload: {
-              login: {
-                username: "big.jim@deliveroo.invalid",
-                customer_id: 123,
-                success: true,
-                authentication_mechanism: {
-                  password: {
-                    password: "lol",
-                    success: true
-                  }
-                }
-              }
-            }
+            payload: payload
           )
         }.to_not raise_exception
       end
@@ -212,19 +285,7 @@ describe Ravelin::Event do
       it 'it generates the correct serializable hash' do
         output = described_class.new(
           name: :ato_login,
-          payload: {
-            login: {
-              username: "big.jim@deliveroo.invalid",
-              customer_id: 123,
-              success: true,
-              authentication_mechanism: {
-                password: {
-                  password: "lol",
-                  success: true
-                }
-              }
-            }
-          },
+          payload: payload,
           timestamp: 1586283630
         ).serializable_hash
 
@@ -244,6 +305,14 @@ describe Ravelin::Event do
             "timestamp" => 1586283630000
           }
         )
+      end
+
+      it 'includes the correct event name' do
+        expect(
+          described_class.new(
+            name: :ato_login,
+            payload: payload
+          ).name).to eq(:login)
       end
     end
 
@@ -272,6 +341,14 @@ describe Ravelin::Event do
                                      timestamp: 1586283630)
                      .serializable_hash
         expect(output).to eq( {"customers"=>[{:customer_id=>"12345", :method=>"PasswordReset"}], "source"=>"ATO", "timestamp"=>"2020-04-07T18:20:30+00:00"} )
+      end
+
+      it 'includes the correct event name' do
+        expect(
+          described_class.new(
+            name: :ato_reclaim,
+            payload: { customers: [{customer_id: "12345", method: "PasswordReset"}], source: "ATO" }
+          ).name).to eq(:reclaim)
       end
     end
   end
