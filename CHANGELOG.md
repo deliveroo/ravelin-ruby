@@ -1,3 +1,8 @@
+# 0.1.25
+Disambiguate between V2 and V3 login events:
+* Applies correct timestamp formatting
+* Corrects validation
+
 # 0.1.24
 
 Fix date formatting for events:

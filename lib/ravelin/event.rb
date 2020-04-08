@@ -3,6 +3,7 @@ module Ravelin
     attr_accessor :name, :timestamp, :payload
 
     def initialize(name:, payload:, timestamp: nil)
+      @internal_name = name
       @name = convert_event_name(name)
       @payload = convert_to_ravelin_objects(payload)
       @timestamp = timestamp.nil? ? Time.now.to_i : convert_to_epoch(timestamp)
@@ -45,10 +46,10 @@ module Ravelin
     end
 
     def format_timestamp(timestamp)
-      case name
-      when :login
+      case @internal_name
+      when :ato_login
         timestamp * 1000
-      when :reclaim
+      when :ato_reclaim
         Time.at(timestamp).utc.to_datetime.to_s
       else
         timestamp
@@ -60,14 +61,14 @@ module Ravelin
     def validate_top_level_payload_params
       validate_customer_id_presence_on :order, :paymentmethod,
         :pretransaction, :transaction, :label
-      case name
+      case @internal_name
       when :customer
         validate_payload_inclusion_of :customer
       when :voucher
         validate_payload_inclusion_of :voucher
       when :'paymentmethod/voucher'
         validate_payload_inclusion_of :'voucher_redemption'
-      when :pretransaction, :transaction
+      when :pre_transaction, :transaction
         validate_payload_must_include_one_of(
           :payment_method_id, :payment_method
         )
@@ -76,8 +77,10 @@ module Ravelin
         validate_payload_inclusion_of :customer, :order,
           :payment_method, :transaction
       when :login
+        validate_payload_inclusion_of :username, :success, :authentication_mechanism
+      when :ato_login
         validate_payload_inclusion_of :login
-      when :reclaim
+      when :ato_reclaim
         validate_payload_inclusion_of :customers, :source
       end
     end
