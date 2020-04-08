@@ -176,18 +176,6 @@ describe Ravelin::Event do
     end
 
     context 'ato login' do
-      it 'throws ArgumentError with missing payload parameters' do
-        expect {
-          described_class.new(
-            name: :ato_login,
-            payload: { }
-          )
-        }.to raise_exception(
-                 ArgumentError,
-                 /payload missing parameters: login/
-             )
-      end
-
       it 'is executed cleanly with required payload parameters' do
         expect {
           described_class.new(

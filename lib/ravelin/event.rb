@@ -75,8 +75,6 @@ module Ravelin
       when :checkout
         validate_payload_inclusion_of :customer, :order,
           :payment_method, :transaction
-      when :login
-        validate_payload_inclusion_of :login
       when :reclaim
         validate_payload_inclusion_of :customers, :source
       end

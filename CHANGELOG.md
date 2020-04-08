@@ -1,3 +1,6 @@
+# 0.1.25
+Remove validation of ATO login events
+
 # 0.1.24
 
 Fix date formatting for events:
