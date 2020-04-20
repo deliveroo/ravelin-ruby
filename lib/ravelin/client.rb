@@ -1,4 +1,5 @@
 require 'faraday_middleware/response_middleware'
+require 'base64'
 
 # This is a hack to compensate for Ravelin sending `null` in the response for 200's.
 class FaradayMiddleware::ParseJson
@@ -14,10 +15,13 @@ module Ravelin
     def initialize(api_key:, api_version: 2)
       @api_key = api_key
 
-      raise ArgumentError.new("api_version must be 2 or 3") unless [2,3].include? api_version
+      raise ArgumentError, "api_version must be 2 or 3" unless [2,3].include? api_version
       @api_version = api_version
 
-      @connection = new_faraday_connection(API_BASE)
+      @connection = Faraday.new(API_BASE, faraday_options) do |conn|
+        conn.response :json, context_type: /\bjson$/
+        conn.adapter Ravelin.faraday_adapter
+      end
     end
 
     def send_event(**args)
@@ -31,7 +35,7 @@ module Ravelin
 
     def send_backfill_event(**args)
       unless args.has_key?(:timestamp)
-        raise ArgumentError.new('missing parameters: timestamp')
+        raise ArgumentError, 'missing parameters: timestamp'
       end
 
       event = Event.new(**args)
@@ -102,13 +106,13 @@ module Ravelin
     def handle_error_response(response)
       case response.status
       when 400, 403, 404, 405, 406
-        raise InvalidRequestError.new(response)
+        raise InvalidRequestError, response
       when 401
-        raise AuthenticationError.new(response)
+        raise AuthenticationError, response
       when 429
-        raise RateLimitError.new(response)
+        raise RateLimitError, response
       else
-        raise ApiError.new(response)
+        raise ApiError, response
       end
     end
 
@@ -122,16 +126,31 @@ module Ravelin
         }
       }
     end
+
+    def faraday_proxy_options
+      {
+        request: { timeout: Ravelin.faraday_timeout },
+        headers: {
+          'Authorization' => "Basic #{@api_key}",
+          'Content-Type'  => 'application/json; charset=utf-8'.freeze,
+          'User-Agent'    => "Ravelin RubyGem/#{Ravelin::VERSION}".freeze
+        }
+      }
+    end
+
   end
 
   class ProxyClient < Client
-    def initialize(api_base_url:, api_key:, api_version: 2)
-      @api_key = api_key
+    def initialize(proxy_base_url:, proxy_username:, proxy_password:, api_version: 2)
+      @api_key = Base64.strict_encode64("#{proxy_username}:#{proxy_password}")
 
-      raise ArgumentError.new("api_version must be 2 or 3") unless [2,3].include? api_version
+      raise ArgumentError, "api_version must be 2 or 3" unless [2,3].include? api_version
       @api_version = api_version
 
-      @connection = new_faraday_connection(api_base_url)
+      @connection = Faraday.new(proxy_base_url, faraday_proxy_options) do |conn|
+        conn.response :json, context_type: /\bjson$/
+        conn.adapter Ravelin.faraday_adapter
+      end
     end
   end
 end
