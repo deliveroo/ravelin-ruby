@@ -17,10 +17,7 @@ module Ravelin
       raise ArgumentError.new("api_version must be 2 or 3") unless [2,3].include? api_version
       @api_version = api_version
 
-      @connection = Faraday.new(API_BASE, faraday_options) do |conn|
-        conn.response :json, context_type: /\bjson$/
-        conn.adapter Ravelin.faraday_adapter
-      end
+      @connection = new_faraday_connection(API_BASE)
     end
 
     def send_event(**args)
@@ -64,6 +61,13 @@ module Ravelin
     end
 
     private
+
+    def new_faraday_connection(api_base_url)
+      Faraday.new(api_base_url, faraday_options) do |conn|
+        conn.response :json, context_type: /\bjson$/
+        conn.adapter Ravelin.faraday_adapter
+      end
+    end
 
     def post(url, payload)
       response = @connection.post(url, payload.to_json)
@@ -117,6 +121,17 @@ module Ravelin
           'User-Agent'    => "Ravelin RubyGem/#{Ravelin::VERSION}".freeze
         }
       }
+    end
+  end
+
+  class ProxyClient < Client
+    def initialize(api_base_url:, api_key:, api_version: 2)
+      @api_key = api_key
+
+      raise ArgumentError.new("api_version must be 2 or 3") unless [2,3].include? api_version
+      @api_version = api_version
+
+      @connection = new_faraday_connection(api_base_url)
     end
   end
 end
