@@ -394,4 +394,24 @@ describe Ravelin::ProxyClient do
       end
     end
   end
+
+  describe '#handle null responses' do
+    let(:event) { double('event', name: :ping, serializable_hash: {}) }
+    let(:client) { described_class.new(base_url: base_url, url_prefix: url_prefix, username: username, password: password) }
+
+    before do
+      allow(Ravelin::Event).to receive(:new).and_return(event)
+      stub_request(:post, 'http://127.0.0.1:8020/ravelinproxy/v2/ping').
+        and_return(status: status_code, body: "null")
+    end
+
+    context 'HTTP status 200' do
+      let(:status_code) { 200 }
+
+      it "successful" do
+        expect(client.send_event).to be_a(Ravelin::Response)
+      end
+    end
+  end
+
 end
