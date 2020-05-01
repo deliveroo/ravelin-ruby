@@ -40,7 +40,7 @@ module Ravelin
 
       event = Event.new(**args)
 
-      post("/v#{@api_version}/backfill/#{event.name}", event.serializable_hash)
+      post("#{@url_prefix}/v#{@api_version}/backfill/#{event.name}", event.serializable_hash)
     end
 
     def send_tag(**args)

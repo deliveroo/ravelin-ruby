@@ -80,6 +80,36 @@ describe Ravelin::ProxyClient do
     end
   end
 
+  describe '#send_backfill_event' do
+    include_context 'event setup and stubbing'
+
+    it 'creates an event with method arguments' do
+      expect(Ravelin::Event).to receive(:new).
+        with(name: 'foo', timestamp: 12345, payload: { key: 'value' }).
+        and_return(event)
+
+      client.send_backfill_event(
+        name: 'foo',
+        timestamp: 12345,
+        payload: { key: 'value' }
+      )
+    end
+
+    it 'calls #post /ravelinproxy/v2/backfill/{{event}} with Event payload' do
+      allow(Ravelin::Event).to receive(:new) { event }
+
+      expect(client).to receive(:post).with("/ravelinproxy/v2/backfill/foobar", { id: 'ch-123' })
+
+      client.send_backfill_event(timestamp: Time.now)
+    end
+
+    it 'raises exception when timestamp argument is missing' do
+      expect {
+        client.send_backfill_event(name: :foobar, payload: {})
+      }.to raise_exception(ArgumentError, /missing parameters: timestamp/)
+    end
+  end
+
 
   describe '#post' do
     let(:client) { described_class.new(base_url: base_url, url_prefix: url_prefix, username: username, password: password) }
