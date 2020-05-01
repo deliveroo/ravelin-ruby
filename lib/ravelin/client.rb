@@ -1,4 +1,3 @@
-require 'base64'
 require 'faraday_middleware/response_middleware'
 
 # This is a hack to compensate for Ravelin sending `null` in the response for 200's.
@@ -14,6 +13,7 @@ module Ravelin
 
     def initialize(api_key:, api_version: 2)
       @api_key = api_key
+      @url_prefix = ''
 
       raise ArgumentError.new("api_version must be 2 or 3") unless [2,3].include? api_version
       @api_version = api_version
@@ -30,7 +30,7 @@ module Ravelin
 
       score_param = score ? "?score=true" : nil
 
-      post("/v#{@api_version}/#{event.name}#{score_param}", event.serializable_hash)
+      post("#{@url_prefix}/v#{@api_version}/#{event.name}#{score_param}", event.serializable_hash)
     end
 
     def send_backfill_event(**args)
@@ -65,13 +65,6 @@ module Ravelin
     end
 
     private
-
-    def new_faraday_connection(api_base_url)
-      Faraday.new(api_base_url, faraday_options) do |conn|
-        conn.response :json, context_type: /\bjson$/
-        conn.adapter Ravelin.faraday_adapter
-      end
-    end
 
     def post(url, payload)
       response = @connection.post(url, payload.to_json)
@@ -141,25 +134,16 @@ module Ravelin
 
   class ProxyClient < Client
     def initialize(base_url:, username:, password:, api_version: 2)
-      @api_key = Base64.strict_encode64("#{username}:#{password}")
 
       raise ArgumentError, "api_version must be 2 or 3" unless [2,3].include? api_version
       @api_version = api_version
+      @url_prefix = 'ravelinproxy'
 
       @connection = Faraday.new(base_url, faraday_proxy_options) do |conn|
         conn.response :json, context_type: /\bjson$/
         conn.adapter Ravelin.faraday_adapter
         conn.basic_auth(username, password)
       end
-    end
-
-    def send_event(**args)
-      score = args.delete(:score)
-      event = Event.new(**args)
-
-      score_param = score ? "?score=true" : nil
-
-      post("/ravelinproxy/v#{@api_version}/#{event.name}#{score_param}", event.serializable_hash)
     end
   end
 end
