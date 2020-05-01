@@ -1,3 +1,7 @@
+# 0.1.26
+Added an ProxyClient as an alternative client
+* This can be used to call Ravelin via the Deliveroo Cluedo API
+
 # 0.1.25
 Disambiguate between V2 and V3 login events:
 * Applies correct timestamp formatting
