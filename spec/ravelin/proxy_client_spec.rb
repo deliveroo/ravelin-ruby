@@ -6,14 +6,14 @@ describe Ravelin::ProxyClient do
       expect(Faraday).to receive(:new).
         with('http://127.0.0.1:8020', kind_of(Hash))
 
-      described_class.new(base_url: 'http://127.0.0.1:8020', username: 'foo', password: 'bar')
+      described_class.new(base_url: 'http://127.0.0.1:8020', url_prefix: 'ravelinproxy', username: 'foo', password: 'bar')
     end
   end
 
-  let(:client) { described_class.new(base_url: 'http://127.0.0.1:8020', username: 'foo', password: 'bar') }
+  let(:client) { described_class.new(base_url: 'http://127.0.0.1:8020', url_prefix: 'ravelinproxy', username: 'foo', password: 'bar') }
 
   describe '#post' do
-    let(:client) { described_class.new(base_url: 'http://127.0.0.1:8020', username: 'foo', password: 'bar') }
+    let(:client) { described_class.new(base_url: 'http://127.0.0.1:8020', url_prefix: 'ravelinproxy', username: 'foo', password: 'bar') }
     let(:event) do
       double('event', name: 'ping', serializable_hash: { name: 'value' })
     end
