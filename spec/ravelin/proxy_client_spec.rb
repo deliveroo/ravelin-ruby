@@ -1,26 +1,30 @@
 require 'spec_helper'
 
 describe Ravelin::ProxyClient do
+  let(:base_url) { 'http://127.0.0.1:8020' }
+  let(:url_prefix) { 'ravelinproxy' }
+  let(:username) { 'foo' }
+  let(:password) { 'bar' }
+  let(:base64_enc_user_pass) { 'Zm9vOmJhcg==' }
+
   describe '#initialize' do
     it 'initializes a Faraday connection' do
       expect(Faraday).to receive(:new).
-        with('http://127.0.0.1:8020', kind_of(Hash))
+        with(base_url, kind_of(Hash))
 
-      described_class.new(base_url: 'http://127.0.0.1:8020', url_prefix: 'ravelinproxy', username: 'foo', password: 'bar')
+      described_class.new(base_url: base_url, url_prefix: url_prefix, username: username, password: password)
     end
   end
 
-  let(:client) { described_class.new(base_url: 'http://127.0.0.1:8020', url_prefix: 'ravelinproxy', username: 'foo', password: 'bar') }
-
   describe '#post' do
-    let(:client) { described_class.new(base_url: 'http://127.0.0.1:8020', url_prefix: 'ravelinproxy', username: 'foo', password: 'bar') }
+    let(:client) { described_class.new(base_url: base_url, url_prefix: url_prefix, username: username, password: password) }
     let(:event) do
       double('event', name: 'ping', serializable_hash: { name: 'value' })
     end
 
     let(:headers) do
       {
-        'Authorization' =>'Basic Zm9vOmJhcg==',
+        'Authorization' =>"Basic #{base64_enc_user_pass}",
         'User-Agent'    => "Ravelin Proxy RubyGem/#{Ravelin::VERSION}".freeze
       }
     end
