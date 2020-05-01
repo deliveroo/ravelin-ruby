@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe Ravelin::ProxyClient do
   let(:base_url) { 'http://127.0.0.1:8020' }
-  let(:url_prefix) { '/ravelinproxy' }
   let(:username) { 'foo' }
   let(:password) { 'bar' }
   let(:base64_enc_user_pass) { 'Zm9vOmJhcg==' }
@@ -12,11 +11,11 @@ describe Ravelin::ProxyClient do
       expect(Faraday).to receive(:new).
         with(base_url, kind_of(Hash))
 
-      described_class.new(base_url: base_url, url_prefix: url_prefix, username: username, password: password)
+      described_class.new(base_url: base_url, username: username, password: password)
     end
   end
 
-  let(:client) { described_class.new(base_url: base_url, url_prefix: url_prefix, username: username, password: password) }
+  let(:client) { described_class.new(base_url: base_url, username: username, password: password) }
 
   describe '#send_event' do
     include_context 'event setup and stubbing'
@@ -152,7 +151,7 @@ describe Ravelin::ProxyClient do
   end
 
   describe '#post' do
-    let(:client) { described_class.new(base_url: base_url, url_prefix: url_prefix, username: username, password: password) }
+    let(:client) { described_class.new(base_url: base_url, username: username, password: password) }
     let(:event) do
       double('event', name: 'ping', serializable_hash: { name: 'value' })
     end
@@ -230,7 +229,7 @@ describe Ravelin::ProxyClient do
   end
 
   describe '#delete' do
-    let(:client) { described_class.new(base_url: base_url, url_prefix: url_prefix, username: username, password: password) }
+    let(:client) { described_class.new(base_url: base_url, username: username, password: password) }
     let(:tag) do
       double('tag', name: 'ping', serializable_hash: { "customerId" => '123', "tagNames" => ['foo', 'bar'] })
     end
@@ -302,7 +301,7 @@ describe Ravelin::ProxyClient do
   end
 
   describe '#get' do
-    let(:client) { described_class.new(base_url: base_url, url_prefix: url_prefix, username: username, password: password) }
+    let(:client) { described_class.new(base_url: base_url, username: username, password: password) }
     let(:tag) do
       double('tag', name: 'ping', serializable_hash: { "customerId" => '123', "tagNames" => ['foo', 'bar'] })
     end
@@ -375,7 +374,7 @@ describe Ravelin::ProxyClient do
 
   describe '#handle null responses' do
     let(:event) { double('event', name: :ping, serializable_hash: {}) }
-    let(:client) { described_class.new(base_url: base_url, url_prefix: url_prefix, username: username, password: password) }
+    let(:client) { described_class.new(base_url: base_url, username: username, password: password) }
 
     before do
       allow(Ravelin::Event).to receive(:new).and_return(event)
@@ -400,7 +399,7 @@ describe Ravelin::ProxyClient do
     end
 
     let(:event) { double('event', name: :ping, serializable_hash: {}) }
-    let(:client) { described_class.new(base_url: base_url, url_prefix: url_prefix, username: username, password: password) }
+    let(:client) { described_class.new(base_url: base_url, username: username, password: password) }
 
     before do
       allow(Ravelin::Event).to receive(:new).and_return(event)

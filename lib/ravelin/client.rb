@@ -133,11 +133,11 @@ module Ravelin
   end
 
   class ProxyClient < Client
-    def initialize(base_url:, url_prefix:, username:, password:, api_version: 2)
+    def initialize(base_url:, username:, password:, api_version: 2)
 
       raise ArgumentError, "api_version must be 2 or 3" unless [2,3].include? api_version
       @api_version = api_version
-      @url_prefix = url_prefix
+      @url_prefix = '/ravelinproxy'
 
       @connection = Faraday.new(base_url, faraday_proxy_options) do |conn|
         conn.response :json, context_type: /\bjson$/
