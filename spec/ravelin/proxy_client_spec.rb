@@ -173,7 +173,6 @@ describe Ravelin::ProxyClient do
     end
   end
 
-
   describe '#post' do
     let(:client) { described_class.new(base_url: base_url, url_prefix: url_prefix, username: username, password: password) }
     let(:event) do
@@ -202,6 +201,53 @@ describe Ravelin::ProxyClient do
       client.send_event
 
       expect(stub).to have_been_requested
+    end
+
+    context 'response' do
+      before do
+        stub_request(:post, 'http://127.0.0.1:8020/ravelinproxy/v2/ping').
+          to_return(
+            status: response_status,
+            body: body
+          )
+      end
+
+      context 'successful' do
+        shared_examples 'successful request' do
+          it 'returns the response' do
+            expect(client.send_event).to be_a(Ravelin::Response)
+          end
+
+          it "not treated as an error" do
+            expect(client).to_not receive(:handle_error_response)
+
+            client.send_event
+          end
+        end
+
+        context 'when the response code is 200' do
+          let(:response_status) { 200 }
+          let(:body) { '{}' }
+          it_behaves_like 'successful request'
+        end
+
+        context 'when the response code is 200' do
+          let(:response_status) { 204 }
+          let(:body) { '' }
+          it_behaves_like 'successful request'
+        end
+      end
+
+      context 'error' do
+        let(:response_status) { 400 }
+        let(:body) { '{}' }
+        it 'handles error response' do
+          expect(client).to receive(:handle_error_response).
+            with(kind_of(Faraday::Response))
+
+          client.send_event
+        end
+      end
     end
   end
 end
