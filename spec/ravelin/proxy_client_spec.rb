@@ -414,4 +414,60 @@ describe Ravelin::ProxyClient do
     end
   end
 
+  describe '#handle_error_response' do
+    shared_examples 'raises error with' do |error_class|
+      it "raises #{error_class} error" do
+        expect { client.send_event }.to raise_exception(error_class)
+      end
+    end
+
+    let(:event) { double('event', name: :ping, serializable_hash: {}) }
+    let(:client) { described_class.new(base_url: base_url, url_prefix: url_prefix, username: username, password: password) }
+
+    before do
+      allow(Ravelin::Event).to receive(:new).and_return(event)
+      stub_request(:post, 'http://127.0.0.1:8020/ravelinproxy/v2/ping').
+        and_return(status: status_code, body: "{}")
+    end
+
+    context 'HTTP status 400' do
+      let(:status_code) { 400 }
+      include_examples 'raises error with', Ravelin::InvalidRequestError
+    end
+
+    context 'HTTP status 403' do
+      let(:status_code) { 403 }
+      include_examples 'raises error with', Ravelin::InvalidRequestError
+    end
+
+    context 'HTTP status 404' do
+      let(:status_code) { 404 }
+      include_examples 'raises error with', Ravelin::InvalidRequestError
+    end
+
+    context 'HTTP status 405' do
+      let(:status_code) { 405 }
+      include_examples 'raises error with', Ravelin::InvalidRequestError
+    end
+
+    context 'HTTP status 406' do
+      let(:status_code) { 406 }
+      include_examples 'raises error with', Ravelin::InvalidRequestError
+    end
+
+    context 'HTTP status 401' do
+      let(:status_code) { 401 }
+      include_examples 'raises error with', Ravelin::AuthenticationError
+    end
+
+    context 'HTTP status 429' do
+      let(:status_code) { 429 }
+      include_examples 'raises error with', Ravelin::RateLimitError
+    end
+
+    context 'HTTP status 500' do
+      let(:status_code) { 500 }
+      include_examples 'raises error with', Ravelin::ApiError
+    end
+  end
 end
