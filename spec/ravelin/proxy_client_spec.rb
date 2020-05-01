@@ -110,6 +110,69 @@ describe Ravelin::ProxyClient do
     end
   end
 
+  describe '#send_tag' do
+    include_context 'tag setup and stubbing'
+
+    it 'creates a tag with method arguments' do
+      expect(Ravelin::Tag).to receive(:new).
+        with(payload: {:tagNames=>['foo', 'bar']}).
+        and_return(tag)
+
+      client.send_tag(
+        payload: { tagNames: ['foo', 'bar'] }
+      )
+    end
+
+    it 'calls #post with Tag payload' do
+      allow(Ravelin::Tag).to receive(:new) { tag }
+
+      expect(client).to receive(:post).with('/ravelinproxy/v2/tag/customer',
+                                            {
+                                              "customerId" => '123',
+                                              "tagNames" => ['foo', 'bar']
+                                            }
+      )
+
+      client.send_tag
+    end
+  end
+
+  describe '#delete_tag' do
+    include_context 'tag setup and stubbing'
+
+    context 'when deleting one tag' do
+      let(:tag_payload) { { "customerId" => '123', "tagNames" => ['foo'] } }
+
+      it 'calls #delete with Tag payload' do
+        allow(Ravelin::Tag).to receive(:new) { tag }
+        expect(client).to receive(:delete).with('/ravelinproxy/v2/tag/customer?customerId=123&tagName=foo')
+        client.delete_tag
+      end
+    end
+
+    context 'when deleting multiple tags' do
+      it 'calls #delete with Tag payload' do
+        allow(Ravelin::Tag).to receive(:new) { tag }
+        expect(client).to receive(:delete).with('/ravelinproxy/v2/tag/customer?customerId=123&tagName=foo,bar')
+        client.delete_tag
+      end
+    end
+  end
+
+  describe '#get_tag' do
+    include_context 'tag setup and stubbing'
+
+    context 'when deleting one tag' do
+      let(:tag_payload) { { "customerId" => '123' } }
+
+      it 'calls #get with customer id' do
+        allow(Ravelin::Tag).to receive(:new) { tag }
+        expect(client).to receive(:get).with('/ravelinproxy/v2/tag/customer/123')
+        client.get_tag
+      end
+    end
+  end
+
 
   describe '#post' do
     let(:client) { described_class.new(base_url: base_url, url_prefix: url_prefix, username: username, password: password) }

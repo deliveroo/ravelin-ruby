@@ -46,7 +46,7 @@ module Ravelin
     def send_tag(**args)
       tag = Tag.new(**args)
 
-      post("/v#{@api_version}/tag/customer", tag.serializable_hash)
+      post("#{@url_prefix}/v#{@api_version}/tag/customer", tag.serializable_hash)
     end
 
     def delete_tag(**args)
@@ -54,14 +54,14 @@ module Ravelin
       customer_id = tag["customerId"]
       tags = tag["tagNames"].join(",")
 
-      delete("/v#{@api_version}/tag/customer?customerId=#{customer_id}&tagName=#{tags}")
+      delete("#{@url_prefix}/v#{@api_version}/tag/customer?customerId=#{customer_id}&tagName=#{tags}")
     end
 
     def get_tag(**args)
       tag = Tag.new(**args).serializable_hash
       customer_id = tag["customerId"]
 
-      get("/v#{@api_version}/tag/customer/#{customer_id}")
+      get("#{@url_prefix}/v#{@api_version}/tag/customer/#{customer_id}")
     end
 
     private
