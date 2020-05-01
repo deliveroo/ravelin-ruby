@@ -250,4 +250,76 @@ describe Ravelin::ProxyClient do
       end
     end
   end
+
+  describe '#delete' do
+    let(:client) { described_class.new(base_url: base_url, url_prefix: url_prefix, username: username, password: password) }
+    let(:tag) do
+      double('tag', name: 'ping', serializable_hash: { "customerId" => '123', "tagNames" => ['foo', 'bar'] })
+    end
+
+    before do
+      allow(Ravelin::Tag).to receive(:new).and_return(tag)
+    end
+
+    it 'calls Ravelin with correct headers and body' do
+      stub = stub_request(:delete, 'http://127.0.0.1:8020/ravelinproxy/v2/tag/customer?customerId=123&tagName=foo,bar').
+        with(
+          headers: { 'Authorization' => "Basic #{base64_enc_user_pass}" }
+        ).and_return(
+        headers: { 'Content-Type' => 'application/json' },
+        body: '{}'
+      )
+
+      client.delete_tag
+
+      expect(stub).to have_been_requested
+    end
+
+    context 'response' do
+      before do
+        stub_request(:delete, 'http://127.0.0.1:8020/ravelinproxy/v2/tag/customer?customerId=123&tagName=foo,bar').
+          to_return(
+            status: response_status,
+            body: body
+          )
+      end
+
+      context 'successful' do
+        shared_examples 'successful request' do
+          it 'returns the response' do
+            expect(client.delete_tag).to be_a(Ravelin::Response)
+          end
+
+          it "not treated as an error" do
+            expect(client).to_not receive(:handle_error_response)
+
+            client.delete_tag
+          end
+        end
+
+        context 'when the response code is 200' do
+          let(:response_status) { 200 }
+          let(:body) { '{}' }
+          it_behaves_like 'successful request'
+        end
+
+        context 'when the response code is 200' do
+          let(:response_status) { 204 }
+          let(:body) { '' }
+          it_behaves_like 'successful request'
+        end
+      end
+
+      context 'error' do
+        let(:response_status) { 400 }
+        let(:body) { '{}' }
+        it 'handles error response' do
+          expect(client).to receive(:handle_error_response).
+            with(kind_of(Faraday::Response))
+
+          client.delete_tag
+        end
+      end
+    end
+  end
 end
