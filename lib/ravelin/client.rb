@@ -14,7 +14,7 @@ module Ravelin
     def initialize(api_key:, api_version: 2)
       @api_key = api_key
 
-      raise ArgumentError.new("api_version must be 2 or 3") unless [2,3].include? api_version
+      raise ArgumentError.new("api_version must be 2 or 3") unless [2, 3].include? api_version
       @api_version = api_version
 
       @connection = Faraday.new(API_BASE, faraday_options) do |conn|
@@ -27,7 +27,7 @@ module Ravelin
       score = args.delete(:score)
       event = Event.new(**args)
 
-      score_param = score ? "?score=true" : nil
+      score_param = score ? '?score=true' : '?score=false'
 
       post("/v#{@api_version}/#{event.name}#{score_param}", event.serializable_hash)
     end
@@ -110,11 +110,11 @@ module Ravelin
 
     def faraday_options
       {
-        request: { timeout: Ravelin.faraday_timeout },
+        request: {timeout: Ravelin.faraday_timeout},
         headers: {
           'Authorization' => "token #{@api_key}",
-          'Content-Type'  => 'application/json; charset=utf-8'.freeze,
-          'User-Agent'    => "Ravelin RubyGem/#{Ravelin::VERSION}".freeze
+          'Content-Type' => 'application/json; charset=utf-8'.freeze,
+          'User-Agent' => "Ravelin RubyGem/#{Ravelin::VERSION}".freeze
         }
       }
     end

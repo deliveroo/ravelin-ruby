@@ -52,7 +52,7 @@ describe Ravelin::Client do
     it 'calls #post with Event payload' do
       allow(Ravelin::Event).to receive(:new) { event }
 
-      expect(client).to receive(:post).with("/v2/foobar", { id: 'ch-123' })
+      expect(client).to receive(:post).with("/v2/foobar?score=false", { id: 'ch-123' })
 
       client.send_event
     end
@@ -68,7 +68,7 @@ describe Ravelin::Client do
     it 'calls #post with Event payload and score: false' do
       allow(Ravelin::Event).to receive(:new) { event }
 
-      expect(client).to receive(:post).with("/v2/foobar", { id: 'ch-123' })
+      expect(client).to receive(:post).with("/v2/foobar?score=false", { id: 'ch-123' })
 
       client.send_event(score: false)
     end
@@ -178,7 +178,7 @@ describe Ravelin::Client do
     end
 
     it 'calls Ravelin with correct headers and body' do
-      stub = stub_request(:post, 'https://api.ravelin.com/v2/ping').
+      stub = stub_request(:post, 'https://api.ravelin.com/v2/ping?score=false').
         with(
           headers: { 'Authorization' => 'token abc' },
           body: { name: 'value' }.to_json,
@@ -194,7 +194,7 @@ describe Ravelin::Client do
 
     context 'response' do
       before do
-        stub_request(:post, 'https://api.ravelin.com/v2/ping').
+        stub_request(:post, 'https://api.ravelin.com/v2/ping?score=false').
           to_return(
             status: response_status,
             body: body
@@ -390,7 +390,7 @@ describe Ravelin::Client do
 
     before do
       allow(Ravelin::Event).to receive(:new).and_return(event)
-      stub_request(:post, 'https://api.ravelin.com/v2/ping').
+      stub_request(:post, 'https://api.ravelin.com/v2/ping?score=false').
         and_return(status: status_code, body: "null")
     end
 
@@ -415,7 +415,7 @@ describe Ravelin::Client do
 
     before do
       allow(Ravelin::Event).to receive(:new).and_return(event)
-      stub_request(:post, 'https://api.ravelin.com/v2/ping').
+      stub_request(:post, 'https://api.ravelin.com/v2/ping?score=false').
         and_return(status: status_code, body: "{}")
     end
 
