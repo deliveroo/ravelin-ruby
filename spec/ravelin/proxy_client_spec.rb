@@ -168,7 +168,7 @@ describe Ravelin::ProxyClient do
     end
 
     it 'calls Ravelin Proxy with correct headers and body' do
-      stub = stub_request(:post, "http://127.0.0.1:8020/ravelinproxy/v2/ping").
+      stub = stub_request(:post, "#{base_url}/ravelinproxy/v2/ping").
         with(
           body: { name: 'value' }.to_json,
           headers: headers
@@ -182,7 +182,7 @@ describe Ravelin::ProxyClient do
 
     context 'response' do
       before do
-        stub_request(:post, 'http://127.0.0.1:8020/ravelinproxy/v2/ping').
+        stub_request(:post, "#{base_url}/ravelinproxy/v2/ping").
           to_return(
             status: response_status,
             body: body
@@ -239,7 +239,7 @@ describe Ravelin::ProxyClient do
     end
 
     it 'calls Ravelin with correct headers and body' do
-      stub = stub_request(:delete, 'http://127.0.0.1:8020/ravelinproxy/v2/tag/customer?customerId=123&tagName=foo,bar').
+      stub = stub_request(:delete, "#{base_url}/ravelinproxy/v2/tag/customer?customerId=123&tagName=foo,bar").
         with(
           headers: { 'Authorization' => "Basic #{base64_enc_user_pass}" }
         ).and_return(
@@ -254,7 +254,7 @@ describe Ravelin::ProxyClient do
 
     context 'response' do
       before do
-        stub_request(:delete, 'http://127.0.0.1:8020/ravelinproxy/v2/tag/customer?customerId=123&tagName=foo,bar').
+        stub_request(:delete, "#{base_url}/ravelinproxy/v2/tag/customer?customerId=123&tagName=foo,bar").
           to_return(
             status: response_status,
             body: body
@@ -311,7 +311,7 @@ describe Ravelin::ProxyClient do
     end
 
     it 'calls Ravelin with correct headers and body' do
-      stub = stub_request(:get, 'http://127.0.0.1:8020/ravelinproxy/v2/tag/customer/123').
+      stub = stub_request(:get, "#{base_url}/ravelinproxy/v2/tag/customer/123").
         with(
           headers: { 'Authorization' => "Basic #{base64_enc_user_pass}" }
         ).and_return(
@@ -326,7 +326,7 @@ describe Ravelin::ProxyClient do
 
     context 'response' do
       before do
-        stub_request(:get, 'http://127.0.0.1:8020/ravelinproxy/v2/tag/customer/123').
+        stub_request(:get, "#{base_url}/ravelinproxy/v2/tag/customer/123").
           to_return(
             status: response_status,
             body: body
@@ -378,7 +378,7 @@ describe Ravelin::ProxyClient do
 
     before do
       allow(Ravelin::Event).to receive(:new).and_return(event)
-      stub_request(:post, 'http://127.0.0.1:8020/ravelinproxy/v2/ping').
+      stub_request(:post, "#{base_url}/ravelinproxy/v2/ping").
         and_return(status: status_code, body: "null")
     end
 
@@ -403,7 +403,7 @@ describe Ravelin::ProxyClient do
 
     before do
       allow(Ravelin::Event).to receive(:new).and_return(event)
-      stub_request(:post, 'http://127.0.0.1:8020/ravelinproxy/v2/ping').
+      stub_request(:post, "#{base_url}/ravelinproxy/v2/ping").
         and_return(status: status_code, body: "{}")
     end
 
