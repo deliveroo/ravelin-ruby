@@ -1,3 +1,6 @@
+# 0.1.28
+Explicitly set `score=false` query parameter when sending event to Ravelin. 
+
 # 0.1.27
 Reverted the faraday and rspec versions back to the versions that were in the `0.1.25` gem.
 
