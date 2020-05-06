@@ -35,7 +35,7 @@ describe Ravelin::ProxyClient do
     it 'calls #post with Event payload' do
       allow(Ravelin::Event).to receive(:new) { event }
 
-      expect(client).to receive(:post).with("/ravelinproxy/v2/foobar", { id: 'ch-123' })
+      expect(client).to receive(:post).with("/ravelinproxy/v2/foobar?score=false", { id: 'ch-123' })
 
       client.send_event
     end
@@ -51,7 +51,7 @@ describe Ravelin::ProxyClient do
     it 'calls #post with Event payload and score: false' do
       allow(Ravelin::Event).to receive(:new) { event }
 
-      expect(client).to receive(:post).with("/ravelinproxy/v2/foobar", { id: 'ch-123' })
+      expect(client).to receive(:post).with("/ravelinproxy/v2/foobar?score=false", { id: 'ch-123' })
 
       client.send_event(score: false)
     end
@@ -168,7 +168,7 @@ describe Ravelin::ProxyClient do
     end
 
     it 'calls Ravelin Proxy with correct headers and body' do
-      stub = stub_request(:post, "#{base_url}/ravelinproxy/v2/ping").
+      stub = stub_request(:post, "#{base_url}/ravelinproxy/v2/ping?score=false").
         with(
           body: { name: 'value' }.to_json,
           headers: headers
@@ -182,7 +182,7 @@ describe Ravelin::ProxyClient do
 
     context 'response' do
       before do
-        stub_request(:post, "#{base_url}/ravelinproxy/v2/ping").
+        stub_request(:post, "#{base_url}/ravelinproxy/v2/ping?score=false").
           to_return(
             status: response_status,
             body: body
@@ -378,7 +378,7 @@ describe Ravelin::ProxyClient do
 
     before do
       allow(Ravelin::Event).to receive(:new).and_return(event)
-      stub_request(:post, "#{base_url}/ravelinproxy/v2/ping").
+      stub_request(:post, "#{base_url}/ravelinproxy/v2/ping?score=false").
         and_return(status: status_code, body: "null")
     end
 
@@ -403,7 +403,7 @@ describe Ravelin::ProxyClient do
 
     before do
       allow(Ravelin::Event).to receive(:new).and_return(event)
-      stub_request(:post, "#{base_url}/ravelinproxy/v2/ping").
+      stub_request(:post, "#{base_url}/ravelinproxy/v2/ping?score=false").
         and_return(status: status_code, body: "{}")
     end
 
