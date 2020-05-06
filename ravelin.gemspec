@@ -14,8 +14,8 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://developer.ravelin.com'
   spec.license       = 'MIT'
 
-  spec.add_dependency('faraday', '~> 0.17')
-  spec.add_dependency('faraday_middleware', '~> 0.14')
+  spec.add_dependency('faraday', '~> 0.15')
+  spec.add_dependency('faraday_middleware', '~> 0.10')
 
   spec.files         = Dir['lib/**/*.rb']
   spec.bindir        = 'exe'
