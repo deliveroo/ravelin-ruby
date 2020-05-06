@@ -34,6 +34,16 @@ First thing to do is create a client with your Ravelin API key.
 client = Ravelin::Client.new(api_key: 'sk_test_XXX')
 ```
 
+### Proxy Client
+An alternative client can be used to call Ravelin via an HTTP Proxy server that supports basic auth. 
+* In order to use the alternative ProxyClient, you must have an HTTP Proxy running. 
+* For the purpose of this example, we will use the url: `https://ravelin-proxy.com`.
+* All requests to `https://ravelin-proxy.com/ravelinproxy` must have their basic auth header replaced with the Ravelin token in your HTTP proxy service, then forwarded the entire request to the Ravelin API.
+
+Example of creating the proxy client:
+```ruby
+c = Ravelin::ProxyClient.new(base_url: 'https://ravelin-proxy.com', username:'foo', password:'bar')
+```
 
 ### Configuration
 

@@ -1,16 +1,21 @@
 require 'spec_helper'
 
-describe Ravelin::Client do
+describe Ravelin::ProxyClient do
+  let(:base_url) { 'http://127.0.0.1:8020' }
+  let(:username) { 'foo' }
+  let(:password) { 'bar' }
+  let(:base64_enc_user_pass) { 'Zm9vOmJhcg==' }
+
   describe '#initialize' do
     it 'initializes a Faraday connection' do
       expect(Faraday).to receive(:new).
-        with('https://api.ravelin.com', kind_of(Hash))
+        with(base_url, kind_of(Hash))
 
-      described_class.new(api_key: 'abc')
+      described_class.new(base_url: base_url, username: username, password: password)
     end
   end
 
-  let(:client) { described_class.new(api_key: 'abc') }
+  let(:client) { described_class.new(base_url: base_url, username: username, password: password) }
 
   describe '#send_event' do
     include_context 'event setup and stubbing'
@@ -24,13 +29,13 @@ describe Ravelin::Client do
         name: 'foo',
         timestamp: 12345,
         payload: { key: 'value' },
-      )
+        )
     end
 
     it 'calls #post with Event payload' do
       allow(Ravelin::Event).to receive(:new) { event }
 
-      expect(client).to receive(:post).with("/v2/foobar?score=false", { id: 'ch-123' })
+      expect(client).to receive(:post).with("/ravelinproxy/v2/foobar", { id: 'ch-123' })
 
       client.send_event
     end
@@ -38,7 +43,7 @@ describe Ravelin::Client do
     it 'calls #post with Event payload and score: true' do
       allow(Ravelin::Event).to receive(:new) { event }
 
-      expect(client).to receive(:post).with("/v2/foobar?score=true", { id: 'ch-123' })
+      expect(client).to receive(:post).with("/ravelinproxy/v2/foobar?score=true", { id: 'ch-123' })
 
       client.send_event(score: true)
     end
@@ -46,7 +51,7 @@ describe Ravelin::Client do
     it 'calls #post with Event payload and score: false' do
       allow(Ravelin::Event).to receive(:new) { event }
 
-      expect(client).to receive(:post).with("/v2/foobar?score=false", { id: 'ch-123' })
+      expect(client).to receive(:post).with("/ravelinproxy/v2/foobar", { id: 'ch-123' })
 
       client.send_event(score: false)
     end
@@ -67,10 +72,10 @@ describe Ravelin::Client do
       )
     end
 
-    it 'calls #post /v2/backfill/{{event}} with Event payload' do
+    it 'calls #post /ravelinproxy/v2/backfill/{{event}} with Event payload' do
       allow(Ravelin::Event).to receive(:new) { event }
 
-      expect(client).to receive(:post).with("/v2/backfill/foobar", { id: 'ch-123' })
+      expect(client).to receive(:post).with("/ravelinproxy/v2/backfill/foobar", { id: 'ch-123' })
 
       client.send_backfill_event(timestamp: Time.now)
     end
@@ -87,22 +92,22 @@ describe Ravelin::Client do
 
     it 'creates a tag with method arguments' do
       expect(Ravelin::Tag).to receive(:new).
-          with(payload: {:tagNames=>['foo', 'bar']}).
-          and_return(tag)
+        with(payload: {:tagNames=>['foo', 'bar']}).
+        and_return(tag)
 
       client.send_tag(
-          payload: { tagNames: ['foo', 'bar'] }
+        payload: { tagNames: ['foo', 'bar'] }
       )
     end
 
     it 'calls #post with Tag payload' do
       allow(Ravelin::Tag).to receive(:new) { tag }
 
-      expect(client).to receive(:post).with('/v2/tag/customer',
-          {
-              "customerId" => '123',
-              "tagNames" => ['foo', 'bar']
-          }
+      expect(client).to receive(:post).with('/ravelinproxy/v2/tag/customer',
+                                            {
+                                              "customerId" => '123',
+                                              "tagNames" => ['foo', 'bar']
+                                            }
       )
 
       client.send_tag
@@ -117,7 +122,7 @@ describe Ravelin::Client do
 
       it 'calls #delete with Tag payload' do
         allow(Ravelin::Tag).to receive(:new) { tag }
-        expect(client).to receive(:delete).with('/v2/tag/customer?customerId=123&tagName=foo')
+        expect(client).to receive(:delete).with('/ravelinproxy/v2/tag/customer?customerId=123&tagName=foo')
         client.delete_tag
       end
     end
@@ -125,7 +130,7 @@ describe Ravelin::Client do
     context 'when deleting multiple tags' do
       it 'calls #delete with Tag payload' do
         allow(Ravelin::Tag).to receive(:new) { tag }
-        expect(client).to receive(:delete).with('/v2/tag/customer?customerId=123&tagName=foo,bar')
+        expect(client).to receive(:delete).with('/ravelinproxy/v2/tag/customer?customerId=123&tagName=foo,bar')
         client.delete_tag
       end
     end
@@ -139,32 +144,37 @@ describe Ravelin::Client do
 
       it 'calls #get with customer id' do
         allow(Ravelin::Tag).to receive(:new) { tag }
-        expect(client).to receive(:get).with('/v2/tag/customer/123')
+        expect(client).to receive(:get).with('/ravelinproxy/v2/tag/customer/123')
         client.get_tag
       end
     end
   end
 
   describe '#post' do
-    let(:client) { described_class.new(api_key: 'abc') }
+    let(:client) { described_class.new(base_url: base_url, username: username, password: password) }
     let(:event) do
       double('event', name: 'ping', serializable_hash: { name: 'value' })
+    end
+
+    let(:headers) do
+      {
+        'Authorization' =>"Basic #{base64_enc_user_pass}",
+        'User-Agent'    => "Ravelin Proxy RubyGem/#{Ravelin::VERSION}".freeze
+      }
     end
 
     before do
       allow(Ravelin::Event).to receive(:new).and_return(event)
     end
 
-    it 'calls Ravelin with correct headers and body' do
-      stub = stub_request(:post, 'https://api.ravelin.com/v2/ping?score=false').
+    it 'calls Ravelin Proxy with correct headers and body' do
+      stub = stub_request(:post, "#{base_url}/ravelinproxy/v2/ping").
         with(
-          headers: { 'Authorization' => 'token abc' },
           body: { name: 'value' }.to_json,
+          headers: headers
         ).and_return(
           headers: { 'Content-Type' => 'application/json' },
-          body: '{}'
-        )
-
+          body: '{}')
       client.send_event
 
       expect(stub).to have_been_requested
@@ -172,7 +182,7 @@ describe Ravelin::Client do
 
     context 'response' do
       before do
-        stub_request(:post, 'https://api.ravelin.com/v2/ping?score=false').
+        stub_request(:post, "#{base_url}/ravelinproxy/v2/ping").
           to_return(
             status: response_status,
             body: body
@@ -219,7 +229,7 @@ describe Ravelin::Client do
   end
 
   describe '#delete' do
-    let(:client) { described_class.new(api_key: 'abc') }
+    let(:client) { described_class.new(base_url: base_url, username: username, password: password) }
     let(:tag) do
       double('tag', name: 'ping', serializable_hash: { "customerId" => '123', "tagNames" => ['foo', 'bar'] })
     end
@@ -229,12 +239,12 @@ describe Ravelin::Client do
     end
 
     it 'calls Ravelin with correct headers and body' do
-      stub = stub_request(:delete, 'https://api.ravelin.com/v2/tag/customer?customerId=123&tagName=foo,bar').
-          with(
-              headers: { 'Authorization' => 'token abc' }
-          ).and_return(
-          headers: { 'Content-Type' => 'application/json' },
-          body: '{}'
+      stub = stub_request(:delete, "#{base_url}/ravelinproxy/v2/tag/customer?customerId=123&tagName=foo,bar").
+        with(
+          headers: { 'Authorization' => "Basic #{base64_enc_user_pass}" }
+        ).and_return(
+        headers: { 'Content-Type' => 'application/json' },
+        body: '{}'
       )
 
       client.delete_tag
@@ -244,11 +254,11 @@ describe Ravelin::Client do
 
     context 'response' do
       before do
-        stub_request(:delete, 'https://api.ravelin.com/v2/tag/customer?customerId=123&tagName=foo,bar').
-            to_return(
-                status: response_status,
-                body: body
-            )
+        stub_request(:delete, "#{base_url}/ravelinproxy/v2/tag/customer?customerId=123&tagName=foo,bar").
+          to_return(
+            status: response_status,
+            body: body
+          )
       end
 
       context 'successful' do
@@ -282,7 +292,7 @@ describe Ravelin::Client do
         let(:body) { '{}' }
         it 'handles error response' do
           expect(client).to receive(:handle_error_response).
-              with(kind_of(Faraday::Response))
+            with(kind_of(Faraday::Response))
 
           client.delete_tag
         end
@@ -291,7 +301,7 @@ describe Ravelin::Client do
   end
 
   describe '#get' do
-    let(:client) { described_class.new(api_key: 'abc') }
+    let(:client) { described_class.new(base_url: base_url, username: username, password: password) }
     let(:tag) do
       double('tag', name: 'ping', serializable_hash: { "customerId" => '123', "tagNames" => ['foo', 'bar'] })
     end
@@ -301,12 +311,12 @@ describe Ravelin::Client do
     end
 
     it 'calls Ravelin with correct headers and body' do
-      stub = stub_request(:get, 'https://api.ravelin.com/v2/tag/customer/123').
-          with(
-              headers: { 'Authorization' => 'token abc' }
-          ).and_return(
-          headers: { 'Content-Type' => 'application/json' },
-          body: '{}'
+      stub = stub_request(:get, "#{base_url}/ravelinproxy/v2/tag/customer/123").
+        with(
+          headers: { 'Authorization' => "Basic #{base64_enc_user_pass}" }
+        ).and_return(
+        headers: { 'Content-Type' => 'application/json' },
+        body: '{}'
       )
 
       client.get_tag
@@ -316,11 +326,11 @@ describe Ravelin::Client do
 
     context 'response' do
       before do
-        stub_request(:get, 'https://api.ravelin.com/v2/tag/customer/123').
-            to_return(
-                status: response_status,
-                body: body
-            )
+        stub_request(:get, "#{base_url}/ravelinproxy/v2/tag/customer/123").
+          to_return(
+            status: response_status,
+            body: body
+          )
       end
 
       context 'successful' do
@@ -354,7 +364,7 @@ describe Ravelin::Client do
         let(:body) { '{}' }
         it 'handles error response' do
           expect(client).to receive(:handle_error_response).
-              with(kind_of(Faraday::Response))
+            with(kind_of(Faraday::Response))
 
           client.get_tag
         end
@@ -364,11 +374,11 @@ describe Ravelin::Client do
 
   describe '#handle null responses' do
     let(:event) { double('event', name: :ping, serializable_hash: {}) }
-    let(:client) { described_class.new(api_key: 'abc') }
+    let(:client) { described_class.new(base_url: base_url, username: username, password: password) }
 
     before do
       allow(Ravelin::Event).to receive(:new).and_return(event)
-      stub_request(:post, 'https://api.ravelin.com/v2/ping?score=false').
+      stub_request(:post, "#{base_url}/ravelinproxy/v2/ping").
         and_return(status: status_code, body: "null")
     end
 
@@ -389,11 +399,11 @@ describe Ravelin::Client do
     end
 
     let(:event) { double('event', name: :ping, serializable_hash: {}) }
-    let(:client) { described_class.new(api_key: 'abc') }
+    let(:client) { described_class.new(base_url: base_url, username: username, password: password) }
 
     before do
       allow(Ravelin::Event).to receive(:new).and_return(event)
-      stub_request(:post, 'https://api.ravelin.com/v2/ping?score=false').
+      stub_request(:post, "#{base_url}/ravelinproxy/v2/ping").
         and_return(status: status_code, body: "{}")
     end
 

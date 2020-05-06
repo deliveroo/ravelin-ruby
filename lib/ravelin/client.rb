@@ -13,6 +13,7 @@ module Ravelin
 
     def initialize(api_key:, api_version: 2)
       @api_key = api_key
+      @url_prefix = ''
 
       raise ArgumentError.new("api_version must be 2 or 3") unless [2, 3].include? api_version
       @api_version = api_version
@@ -29,7 +30,7 @@ module Ravelin
 
       score_param = score ? '?score=true' : '?score=false'
 
-      post("/v#{@api_version}/#{event.name}#{score_param}", event.serializable_hash)
+      post("#{@url_prefix}/v#{@api_version}/#{event.name}#{score_param}", event.serializable_hash)
     end
 
     def send_backfill_event(**args)
@@ -39,13 +40,13 @@ module Ravelin
 
       event = Event.new(**args)
 
-      post("/v#{@api_version}/backfill/#{event.name}", event.serializable_hash)
+      post("#{@url_prefix}/v#{@api_version}/backfill/#{event.name}", event.serializable_hash)
     end
 
     def send_tag(**args)
       tag = Tag.new(**args)
 
-      post("/v#{@api_version}/tag/customer", tag.serializable_hash)
+      post("#{@url_prefix}/v#{@api_version}/tag/customer", tag.serializable_hash)
     end
 
     def delete_tag(**args)
@@ -53,14 +54,14 @@ module Ravelin
       customer_id = tag["customerId"]
       tags = tag["tagNames"].join(",")
 
-      delete("/v#{@api_version}/tag/customer?customerId=#{customer_id}&tagName=#{tags}")
+      delete("#{@url_prefix}/v#{@api_version}/tag/customer?customerId=#{customer_id}&tagName=#{tags}")
     end
 
     def get_tag(**args)
       tag = Tag.new(**args).serializable_hash
       customer_id = tag["customerId"]
 
-      get("/v#{@api_version}/tag/customer/#{customer_id}")
+      get("#{@url_prefix}/v#{@api_version}/tag/customer/#{customer_id}")
     end
 
     private

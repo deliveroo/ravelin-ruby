@@ -35,6 +35,7 @@ require 'ravelin/event'
 require 'ravelin/tag'
 require 'ravelin/response'
 require 'ravelin/client'
+require 'ravelin/proxy_client'
 
 module Ravelin
   @faraday_adapter = Faraday.default_adapter
