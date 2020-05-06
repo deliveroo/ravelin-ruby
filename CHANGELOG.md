@@ -1,6 +1,6 @@
 # 0.1.26
 Added an ProxyClient as an alternative client
-* This can be used to call Ravelin via the Deliveroo Cluedo API
+* Instead of calling the Ravelin API directly, it can be done via an HTTP proxy server.
 
 # 0.1.25
 Disambiguate between V2 and V3 login events:
