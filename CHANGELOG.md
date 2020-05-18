@@ -1,3 +1,6 @@
+# 0.1.28
+Added returning warning messages in the structured response.
+
 # 0.1.27
 Reverted the faraday and rspec versions back to the versions that were in the `0.1.25` gem.
 
