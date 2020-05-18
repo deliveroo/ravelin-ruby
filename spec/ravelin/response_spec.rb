@@ -44,5 +44,35 @@ describe Ravelin::Response do
         expect(response.client_reviewed_status).to eq(-1)
       end
     end
+
+    context 'when Ravelin returns warnings' do
+      let(:faraday_response) do
+        double('faraday', status: 200, body: {
+          'data' => {
+            'warnings'    => [
+              {
+                "class" => "customer-absent-email",
+                "help" => "https://developer.ravelin.com/apis/warnings/#customer-absent-email",
+                "msg" => "Customer \"eg-cust-a1\" does not have an email address."
+              },
+              {
+                "class" => "customer-absent-reg-time",
+                "help" => "https://developer.ravelin.com/apis/warnings/#customer-absent-reg-time",
+                "msg" => "Customer \"eg-cust-a1\" does not have a registration time."
+              },
+              {
+                "class" => "order-absent-price",
+                "help" => "https://developer.ravelin.com/apis/warnings/#order-absent-price",
+                "msg" => "Order \"25857597\" does not have a price."
+              }
+            ]
+          }
+        })
+      end
+
+      it('returns the correct number of warnings') do
+        expect(response.warnings.count).to eq(3)
+      end
+    end
   end
 end
