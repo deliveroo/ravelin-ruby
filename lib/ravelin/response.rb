@@ -12,7 +12,8 @@ module Ravelin
       :tag_names,
       :tags,
       :http_status,
-      :http_body
+      :http_body,
+      :warnings
 
     def initialize(faraday_response)
       return if faraday_response.body.nil? || faraday_response.body.empty?
@@ -36,6 +37,7 @@ module Ravelin
       @source       = data['source']
       @comment      = data['comment']
       @customer_id  = data['customerId']
+      @warnings     = data['warnings']
     end
 
     def tag(response_body)
