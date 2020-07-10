@@ -73,9 +73,6 @@ module Ravelin
           :payment_method_id, :payment_method
         )
         validate_payload_inclusion_of :order_id
-      when :checkout
-        validate_payload_inclusion_of :customer, :order,
-          :payment_method, :transaction
       when :login
         validate_payload_inclusion_of :username, :success, :authentication_mechanism
       when :ato_login
