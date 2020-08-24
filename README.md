@@ -6,8 +6,6 @@ The Ravelin gem is a Ruby wrapper for the
 [Ravelin API](https://developer.ravelin.com). Ravelin is a fraud detection
 tool. See https://ravelin.com for more information.
 
-This library is owned by the Trust team
-([#trust-tech-team](https://deliveroo.slack.com/archives/C017JBMSCUQ))
 
 ## Installation
 
