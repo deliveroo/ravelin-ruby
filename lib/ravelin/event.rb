@@ -39,10 +39,21 @@ module Ravelin
         password:       Password,
         payment_method: PaymentMethod,
         voucher_redemption: VoucherRedemption,
-        transaction:    name == :pretransaction ? PreTransaction : Transaction,
+        transaction:    transaction,
         label:          Label,
         voucher:        Voucher,
       }
+    end
+
+    def transaction
+      case name
+      when :pretransaction
+        PreTransaction
+      when :checkout
+        CheckoutTransaction
+      else
+        Transaction
+      end
     end
 
     def format_timestamp(timestamp)
