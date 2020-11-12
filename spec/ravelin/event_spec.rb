@@ -178,12 +178,12 @@ describe Ravelin::Event do
     context 'v2 login event' do
       let(:payload) {
         {
-          username: "big.jim@deliveroo.invalid",
+          username: 'big.jim@deliveroo.invalid',
           customer_id: 123,
           success: true,
           authentication_mechanism: {
             password: {
-              password: "lol",
+              password: 'lol',
               success: true
             }
           }
@@ -220,16 +220,16 @@ describe Ravelin::Event do
 
         expect(output).to eq(
           {
-            "authenticationMechanism" => {
-              "password" => {
-                "passwordHashed" => "07123e1f482356c415f684407a3b8723e10b2cbbc0b8fcd6282c49d37c9c1abc",
-                "success" => true
+            'authenticationMechanism' => {
+              'password' => {
+                'passwordHashed' => '07123e1f482356c415f684407a3b8723e10b2cbbc0b8fcd6282c49d37c9c1abc',
+                'success' => true
               }
             },
-            "customerId" => "123",
-            "success" => true,
-            "username" => "big.jim@deliveroo.invalid",
-            "timestamp" => 1586283630
+            'customerId' => '123',
+            'success' => true,
+            'username' => 'big.jim@deliveroo.invalid',
+            'timestamp' => 1586283630
           }
         )
       end
@@ -248,12 +248,12 @@ describe Ravelin::Event do
       let(:payload) {
         {
           login: {
-            username: "big.jim@deliveroo.invalid",
+            username: 'big.jim@deliveroo.invalid',
             customer_id: 123,
             success: true,
             authentication_mechanism: {
               password: {
-                password: "lol",
+                password: 'lol',
                 success: true
               }
             }
@@ -426,9 +426,39 @@ describe Ravelin::Event do
     context 'when an _id field is present' do
       let(:payload) { { customer_id: 123 } }
 
-      it "converts integer attributes suffixed with _id to strings" do
+      it 'converts integer attributes suffixed with _id to strings' do
         expect(event.payload).to eq({ customer_id: '123' })
       end
     end
+  end
+
+  describe '#initialize' do
+
+    let(:name) { :checkout }
+
+    let(:event) do
+      described_class.new(name: name, timestamp: 12345, payload: payload)
+    end
+
+    context 'when checkout contains a transaction' do
+
+      let (:payload) { { event_type: 'test', transaction: { transaction_id: '123', currency: 'GBP', gateway: 'gw', gateway_reference: '1234', success: true, debit: 123, credit: 0 } } }
+
+      it 'is valid' do
+        expect(event.serializable_hash).to eql({'eventType'=>'test', 'timestamp'=>12345, 'transaction'=>{'credit'=>0, 'currency'=>'GBP', 'debit'=>123, 'gateway'=>'gw', 'gatewayReference'=>'1234', 'success'=>true, 'transactionId'=>'123'}})
+      end
+
+    end
+
+    context 'when checkout contains a preTransaction' do
+
+      let (:payload) { { event_type: 'test', transaction: { transaction_id: '123', currency: 'GBP', gateway: 'gw', debit: 123, credit: 0 } } }
+
+      it 'is valid' do
+        expect(event.serializable_hash).to eql({'eventType'=>'test', 'timestamp'=>12345, 'transaction'=> {'credit'=>0, 'currency'=>'GBP', 'debit'=>123, 'gateway'=>'gw', 'transactionId'=>'123'}})
+      end
+
+    end
+
   end
 end
