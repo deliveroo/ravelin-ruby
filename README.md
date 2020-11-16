@@ -1,6 +1,6 @@
 # Ravelin
 
-[![Build Status](https://travis-ci.org/deliveroo/ravelin-ruby.svg?branch=master)](https://travis-ci.org/deliveroo/ravelin-ruby)
+[![Build Status](https://circleci.com/gh/deliveroo/ravelin-ruby.svg?style=svg)](https://circleci.com/gh/deliveroo/ravelin-ruby)
 
 The Ravelin gem is a Ruby wrapper for the
 [Ravelin API](https://developer.ravelin.com). Ravelin is a fraud detection
