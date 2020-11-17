@@ -10,6 +10,6 @@ module Ravelin
       :time,
       :custom
 
-    attr_required :transaction_id, :currency, :debit, :credit, :gateway
+    attr_required :transaction_id, :currency, :debit, :credit
   end
 end
