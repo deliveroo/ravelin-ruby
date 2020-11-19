@@ -20,5 +20,15 @@ module Ravelin
                   :three_d_secure
 
     attr_required :transaction_id, :currency, :debit, :credit
+
+    def initialize(params)
+      unless params['3ds'].nil?
+        self.three_d_secure = ThreeDSecure.new(params['3ds'])
+        params.delete('3ds')
+      end
+
+      super(params)
+    end
+
   end
 end
