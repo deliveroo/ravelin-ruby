@@ -41,5 +41,19 @@ describe Ravelin::Order do
       end
 
     end
+
+    context 'with a valid domain' do
+      let(:order) { described_class.new(order_id: 1, app: { name: "my cool app", domain: "a1.b.com"}) }
+      it 'is valid' do
+        expect { order }.not_to raise_error
+      end
+    end
+
+    context 'with an invalid domain' do
+      let(:order) { described_class.new(order_id: 1, app: { name: "my cool app", domain: "http://a1.b.com"}) }
+      it 'fails validation' do
+        expect { order }.to raise_error(ArgumentError)
+      end
+    end
   end
 end

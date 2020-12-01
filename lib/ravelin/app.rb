@@ -8,6 +8,7 @@ module Ravelin
       super
 
       raise InvalidPlatformValueError.new("Platform value be one of #{PLATFORM_VALUES.join(', ')}") unless platform.nil? || PLATFORM_VALUES.include?(platform)
+      raise ArgumentError.new("Domain does not match regex  ^[a-z0-9-\\.]+$") unless domain.nil? ||  /^[a-z0-9-\\.]+$/.match(domain)
     end
 
   end
