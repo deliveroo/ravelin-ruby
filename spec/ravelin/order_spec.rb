@@ -37,7 +37,7 @@ describe Ravelin::Order do
       let(:order) { described_class.new(order_id: 1, app: { name: "my cool app", platform: "shoes"}) }
 
       it 'fails validation' do
-        expect { order }.to raise_error(Ravelin::InvalidPlatformValueError)
+        expect { order }.to raise_error(ArgumentError)
       end
 
     end
