@@ -20,7 +20,7 @@ module Ravelin
     end
 
     def self.valid_domain?(domain)
-      domain.nil? || /^[a-z0-9-\\.]+$/.match(domain)
+      domain.nil? || /^[a-z0-9\-\\.]+$/.match(domain)
     end
 
   end
