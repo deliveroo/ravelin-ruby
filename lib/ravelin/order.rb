@@ -13,7 +13,8 @@ module Ravelin
       :custom,
       :creation_time,
       :execution_time,
-      :status
+      :status,
+      :app
 
     attr_required :order_id
 
@@ -29,6 +30,10 @@ module Ravelin
 
     def to=(obj)
       @to = Ravelin::Location.new(obj)
+    end
+
+    def app=(obj)
+      @app = Ravelin::App.new(obj)
     end
   end
 end

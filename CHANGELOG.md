@@ -1,3 +1,9 @@
+# 0.1.34
+Add App to Order
+
+# 0.1.33
+Allow checkout transactions to have just the information available at pretransaction
+
 # 0.1.28
 Added returning warning messages in the structured response.
 

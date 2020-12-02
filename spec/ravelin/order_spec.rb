@@ -23,4 +23,37 @@ describe Ravelin::Order do
       end
     end
   end
+
+  describe '#app=' do
+    let(:order) { described_class.new(order_id: 1, app: { name: "my cool app", platform: "web"}) }
+
+    it 'has an app set' do
+      expect(order.app.name).to eql("my cool app")
+      expect(order.app.domain).to be_nil
+      expect(order.app.platform).to eql("web")
+    end
+
+    context 'with an invalid platform' do
+      let(:order) { described_class.new(order_id: 1, app: { name: "my cool app", platform: "shoes"}) }
+
+      it 'fails validation' do
+        expect { order }.to raise_error(ArgumentError)
+      end
+
+    end
+
+    context 'with a valid domain' do
+      let(:order) { described_class.new(order_id: 1, app: { name: "my cool app", domain: "a1.b.com"}) }
+      it 'is valid' do
+        expect { order }.not_to raise_error
+      end
+    end
+
+    context 'with an invalid domain' do
+      let(:order) { described_class.new(order_id: 1, app: { name: "my cool app", domain: "http://a1.b.com"}) }
+      it 'fails validation' do
+        expect { order }.to raise_error(ArgumentError)
+      end
+    end
+  end
 end
