@@ -21,7 +21,8 @@ module Ravelin
       # Only when type = paypal
       :email,
       :custom,
-      :e_wallet
+      :e_wallet,
+      :scheme
 
     attr_required :payment_method_id, :method_type
   end
