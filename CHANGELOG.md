@@ -1,3 +1,7 @@
+# 0.1.36
+
+Add category to order
+
 # 0.1.35
 Add scheme paymentMethod key
 
