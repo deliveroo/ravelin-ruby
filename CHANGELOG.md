@@ -1,6 +1,12 @@
+# 0.1.37
+
+Fixes order category from 0.1.36
+
 # 0.1.36
 
 Add category to order
+
+*Don't use* - has a massing comma so category is not available
 
 # 0.1.35
 Add scheme paymentMethod key
