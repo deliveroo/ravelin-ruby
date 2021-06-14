@@ -15,6 +15,7 @@ module Ravelin
       :execution_time,
       :status,
       :app
+      :category
 
     attr_required :order_id
 
