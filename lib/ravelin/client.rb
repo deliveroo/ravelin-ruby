@@ -11,9 +11,10 @@ module Ravelin
   class Client
     API_BASE = 'https://api.ravelin.com'
 
-    def initialize(api_key:, api_version: 2)
+    def initialize(api_key:, api_version: 2, include_rule_output: false)
       @api_key = api_key
       @url_prefix = ''
+      @include_rule_output = include_rule_output
 
       raise ArgumentError.new("api_version must be 2 or 3") unless [2,3].include? api_version
       @api_version = api_version
@@ -110,7 +111,7 @@ module Ravelin
     end
 
     def faraday_options
-      {
+      options = {
         request: { timeout: Ravelin.faraday_timeout },
         headers: {
           'Authorization' => "token #{@api_key}",
@@ -118,6 +119,12 @@ module Ravelin
           'User-Agent'    => "Ravelin RubyGem/#{Ravelin::VERSION}".freeze
         }
       }
+
+      if @include_rule_output
+        options[:headers]['Accept'] = 'application/vnd.ravelin.score.v2+json'
+      end
+
+      options
     end
   end
 end

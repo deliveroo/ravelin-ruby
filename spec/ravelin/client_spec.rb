@@ -8,6 +8,17 @@ describe Ravelin::Client do
 
       described_class.new(api_key: 'abc')
     end
+
+    context 'when include_rule_output is true' do
+      it 'sets the Accept header' do
+        expect(Faraday).to receive(:new).
+          with('https://api.ravelin.com', hash_including(:headers => hash_including('Accept' => "application/vnd.ravelin.score.v2+json")))
+
+        described_class.new(api_key: 'abc', include_rule_output: true)
+      end
+
+    end
+
   end
 
   let(:client) { described_class.new(api_key: 'abc') }
