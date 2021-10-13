@@ -13,6 +13,17 @@ describe Ravelin::ProxyClient do
 
       described_class.new(base_url: base_url, username: username, password: password)
     end
+
+    context 'when include_rule_output is true' do
+      it 'sets the Accept header' do
+        expect(Faraday).to receive(:new).
+          with(base_url, hash_including(:headers => hash_including('Accept' => "application/vnd.ravelin.score.v2+json")))
+
+        described_class.new(base_url: base_url, username: username, password: password, include_rule_output: true)
+      end
+
+    end
+
   end
 
   let(:client) { described_class.new(base_url: base_url, username: username, password: password) }
