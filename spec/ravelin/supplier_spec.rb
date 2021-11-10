@@ -14,4 +14,7 @@ describe Ravelin::Supplier do
     it { expect { subject }.to_not raise_exception }
   end
 
+  it 'raises exception when missing required params' do
+    expect { described_class.new({}) }.to raise_exception(ArgumentError, 'missing parameters: supplier_id, type')
+  end
 end
