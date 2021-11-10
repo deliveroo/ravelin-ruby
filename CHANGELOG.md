@@ -1,3 +1,11 @@
+# 0.1.39
+
+Add [supplier](https://developer.ravelin.com/apis/v2/#postv2supplier) object
+
+# 0.1.38
+
+Add a include_rule_output option
+
 # 0.1.37
 
 Fixes order category from 0.1.36
