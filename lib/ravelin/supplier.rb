@@ -23,7 +23,7 @@ module Ravelin
 
     attr_required :supplier_id, :type
 
-    def home_location(obj)
+    def home_location=(obj)
       @home_location = Ravelin::Location.new(obj)
     end
   end
