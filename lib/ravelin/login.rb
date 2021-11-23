@@ -3,7 +3,8 @@ module Ravelin
     attr_accessor :username,
       :customer_id,
       :success,
-      :authentication_mechanism
+      :authentication_mechanism,
+      :custom
 
     attr_required :username, :success, :authentication_mechanism
 
