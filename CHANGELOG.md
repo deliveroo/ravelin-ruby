@@ -1,3 +1,11 @@
+# 0.1.39
+
+Adds support for the `custom` property on the `Ravelin::Login` class
+
+# 0.1.38
+
+Add a include_rule_output option
+
 # 0.1.37
 
 Fixes order category from 0.1.36
@@ -72,4 +80,3 @@ Add missing fields to Pretransaction Object
 # 0.1.4
 
 Ravelin sends the work `null` in responses if there are no changes.  This causes JSON.parse to fail.
-

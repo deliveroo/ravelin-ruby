@@ -12,6 +12,9 @@ describe Ravelin::Login do
             password: "lol",
             success: true
           }
+        },
+        custom: {
+          decision_id: '0123456789abcdef01234589abcdef'
         }
       }
     )
