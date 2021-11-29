@@ -1,3 +1,7 @@
+# 0.1.40
+
+Add [supplier](https://developer.ravelin.com/apis/v2/#postv2supplier) object
+
 # 0.1.39
 
 Adds support for the `custom` property on the `Ravelin::Login` class
@@ -80,3 +84,4 @@ Add missing fields to Pretransaction Object
 # 0.1.4
 
 Ravelin sends the work `null` in responses if there are no changes.  This causes JSON.parse to fail.
+

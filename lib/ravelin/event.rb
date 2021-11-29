@@ -27,21 +27,22 @@ module Ravelin
 
     def object_classes
       {
-        ato_login:      AtoLogin,
+        ato_login:                AtoLogin,
         authentication_mechanism: AuthenticationMechanism,
-        chargeback:     Chargeback,
-        customer:       Customer,
-        ato_reclaim:    AtoReclaim,
-        device:         Device,
-        location:       Location,
-        login:          Login,
-        order:          Order,
-        password:       Password,
-        payment_method: PaymentMethod,
-        voucher_redemption: VoucherRedemption,
-        transaction:    transaction,
-        label:          Label,
-        voucher:        Voucher,
+        chargeback:               Chargeback,
+        customer:                 Customer,
+        ato_reclaim:              AtoReclaim,
+        device:                   Device,
+        location:                 Location,
+        login:                    Login,
+        order:                    Order,
+        password:                 Password,
+        payment_method:           PaymentMethod,
+        supplier:                 Supplier,
+        voucher_redemption:       VoucherRedemption,
+        transaction:              transaction,
+        label:                    Label,
+        voucher:                  Voucher,
       }
     end
 
