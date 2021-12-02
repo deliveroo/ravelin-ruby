@@ -7,7 +7,6 @@ describe Ravelin::AuthenticationMechanisms::Social do
       success: true,
     )
   }
-  let(:expected_hash) { 'daaad6e5604e8e17bd9f108d91e26afe6281dac8fda0091040a7a6d7bd9b43b5' }
 
   context 'creates instance with valid params and no failure' do
     it { expect { subject }.to_not raise_exception }
