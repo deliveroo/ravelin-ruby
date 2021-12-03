@@ -12,5 +12,9 @@ module Ravelin
     def password=(passwd)
       @password = Ravelin::Password.new(passwd)
     end
+
+    def social=(mechanism)
+      @social = Ravelin::AuthenticationMechanisms::Social(mechanism)
+    end
   end
 end

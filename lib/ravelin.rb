@@ -40,6 +40,9 @@ require 'ravelin/response'
 require 'ravelin/client'
 require 'ravelin/proxy_client'
 
+require 'ravelin/authentication_mechanisms/social'
+
+
 module Ravelin
   @faraday_adapter = Faraday.default_adapter
   @faraday_timeout = 1

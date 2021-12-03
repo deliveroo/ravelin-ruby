@@ -1,3 +1,8 @@
+# 0.1.41
+
+Add [social authenication mechanism](https://developer.ravelin.com/apis/ato/#login.login.authenticationMechanism.social) 
+object
+
 # 0.1.40
 
 Add [supplier](https://developer.ravelin.com/apis/v2/#postv2supplier) object
@@ -84,4 +89,3 @@ Add missing fields to Pretransaction Object
 # 0.1.4
 
 Ravelin sends the work `null` in responses if there are no changes.  This causes JSON.parse to fail.
-
