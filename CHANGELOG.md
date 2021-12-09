@@ -1,3 +1,10 @@
+# 0.1.41.1
+
+Fix [social authenication mechanism](https://developer.ravelin.com/apis/ato/#login.login.authenticationMechanism.social) 
+object
+
+Add tests
+
 # 0.1.41
 
 Add [social authenication mechanism](https://developer.ravelin.com/apis/ato/#login.login.authenticationMechanism.social) 

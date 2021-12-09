@@ -37,6 +37,7 @@ module Ravelin
         login:                    Login,
         order:                    Order,
         password:                 Password,
+        social:                   AuthenticationMechanisms::Social,
         payment_method:           PaymentMethod,
         supplier:                 Supplier,
         voucher_redemption:       VoucherRedemption,
