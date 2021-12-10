@@ -183,7 +183,7 @@ describe Ravelin::Event do
           success: true,
           authentication_mechanism: {
             password: {
-              password: 'lol',
+              password: 'super-secret-password',
               success: true
             }
           }
@@ -222,7 +222,7 @@ describe Ravelin::Event do
           {
             'authenticationMechanism' => {
               'password' => {
-                'passwordHashed' => '07123e1f482356c415f684407a3b8723e10b2cbbc0b8fcd6282c49d37c9c1abc',
+                'passwordHashed' => '5c76fcf4400da3b4804d70b91af20703d483f2c5860cc2f8d59592a1da8d2121',
                 'success' => true
               }
             },
@@ -253,7 +253,7 @@ describe Ravelin::Event do
             success: true,
             authentication_mechanism: {
               password: {
-                password: 'lol',
+                password: 'super-secret-password',
                 success: true
               }
             }
@@ -294,7 +294,7 @@ describe Ravelin::Event do
             "login" => {
               "authenticationMechanism" => {
                 "password" => {
-                  "passwordHashed" => "07123e1f482356c415f684407a3b8723e10b2cbbc0b8fcd6282c49d37c9c1abc",
+                  "passwordHashed" => "5c76fcf4400da3b4804d70b91af20703d483f2c5860cc2f8d59592a1da8d2121",
                   "success" => true
                 }
               },

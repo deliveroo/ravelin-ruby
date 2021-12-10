@@ -14,7 +14,7 @@ module Ravelin
     end
 
     def social=(mechanism)
-      @social = Ravelin::AuthenticationMechanisms::Social(mechanism)
+      @social = Ravelin::AuthenticationMechanisms::Social.new(mechanism)
     end
   end
 end
