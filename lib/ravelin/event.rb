@@ -38,6 +38,7 @@ module Ravelin
         order:                    Order,
         password:                 Password,
         social:                   AuthenticationMechanisms::Social,
+        sms_code:                 AuthenticationMechanisms::SmsCode,
         payment_method:           PaymentMethod,
         supplier:                 Supplier,
         voucher_redemption:       VoucherRedemption,
