@@ -6,7 +6,7 @@ describe Ravelin::AuthenticationMechanism do
       described_class.new(
         {
           password: {
-            password: "lol",
+            password: "super-secret-password",
             success: true
           }
         }
@@ -39,6 +39,26 @@ describe Ravelin::AuthenticationMechanism do
 
     it 'creates a social object' do
       expect(subject.social.success).to eq(false)
+    end
+  end
+
+  context 'for sms code authentication mechanisms' do
+    subject do
+      described_class.new(
+        sms_code: {
+          success: false,
+          phone_number: '+447123456789',
+          failure_reason: 'INVALID_CODE'
+        }
+      )
+    end
+
+    it 'creates instance with valid params' do
+      expect { subject }.to_not raise_exception
+    end
+
+    it 'creates a sms code object' do
+      expect(subject.sms_code.success).to eq(false)
     end
   end
 end

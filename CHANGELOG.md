@@ -1,13 +1,19 @@
-# 0.1.41.1
+# 0.1.43
 
-Fix [social authenication mechanism](https://developer.ravelin.com/apis/ato/#login.login.authenticationMechanism.social) 
+
+Add [sms code authentication mechanism](https://developer.ravelin.com/apis/ato/#login.login.authenticationMechanism.smsCode) 
+object
+
+# 0.1.42
+
+Fix [social authentication mechanism](https://developer.ravelin.com/apis/ato/#login.login.authenticationMechanism.social) 
 object
 
 Add tests
 
 # 0.1.41
 
-Add [social authenication mechanism](https://developer.ravelin.com/apis/ato/#login.login.authenticationMechanism.social) 
+Add [social authentication mechanism](https://developer.ravelin.com/apis/ato/#login.login.authenticationMechanism.social) 
 object
 
 # 0.1.40
