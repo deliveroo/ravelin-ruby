@@ -26,6 +26,11 @@ describe Ravelin::AuthenticationMechanisms::MagicLink do
     it { expect { subject }.to raise_error(ArgumentError).with_message(/phone_number must be present for sms transportation mechanism/) }
   end
 
+  context 'fails if transport param is eamil but email is not provided' do
+    subject { described_class.new(transport: 'email', success: false, failure_reason: 'INVALID_LINK') }
+    it { expect { subject }.to raise_error(ArgumentError).with_message(/email must be present for email transportation mechanism/) }
+  end
+
   context 'fails if the result is failure and no failure reason is provided' do
     subject { described_class.new(transport: 'email', email: 'joe@example.com', success: false) }
     it { expect { subject }.to raise_error(ArgumentError).with_message(/Failure reason value must be one of/) }
