@@ -42,6 +42,7 @@ require 'ravelin/proxy_client'
 
 require 'ravelin/authentication_mechanisms/social'
 require 'ravelin/authentication_mechanisms/sms_code'
+require 'ravelin/authentication_mechanisms/magic_link'
 
 
 module Ravelin

@@ -1,3 +1,8 @@
+# 0.1.44
+
+
+Add [magic link authentication mechanism](https://developer.ravelin.com/apis/ato/#login.login.authenticationMechanism.magiclink) 
+object
 # 0.1.43
 
 

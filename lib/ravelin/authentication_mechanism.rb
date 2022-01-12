@@ -20,5 +20,9 @@ module Ravelin
     def sms_code=(mechanism)
       @sms_code = Ravelin::AuthenticationMechanisms::SmsCode.new(mechanism)
     end
+
+    def magic_link=(mechanism)
+      @sms_code = Ravelin::AuthenticationMechanisms::MagicLink.new(mechanism)
+    end
   end
 end
