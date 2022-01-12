@@ -22,7 +22,7 @@ module Ravelin
     end
 
     def magic_link=(mechanism)
-      @sms_code = Ravelin::AuthenticationMechanisms::MagicLink.new(mechanism)
+      @magic_link = Ravelin::AuthenticationMechanisms::MagicLink.new(mechanism)
     end
   end
 end

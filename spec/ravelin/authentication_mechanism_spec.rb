@@ -70,7 +70,7 @@ describe Ravelin::AuthenticationMechanism do
           success: false,
           email:'joe@example.com',
           phone_number: '+447123456789',
-          failure_reason: 'INVALID_CODE'
+          failure_reason: 'INVALID_LINK'
         }
       )
     end
