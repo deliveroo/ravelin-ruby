@@ -4,7 +4,7 @@ module Ravelin
       DELIVERING_METHODS = %w(email sms)
       FAILURE_REASONS = %w(INVALID_LINK TIMEOUT INTERNAL_ERROR RATE_LIMIT BANNED_USER)
 
-      attr_accessor :transport, :success, :phone_number, :failure_reason
+      attr_accessor :transport, :success, :email, :phone_number, :failure_reason
       attr_required :transport, :success
 
       def failure_reason=(reason)
