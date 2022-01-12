@@ -66,8 +66,9 @@ describe Ravelin::AuthenticationMechanism do
     subject do
       described_class.new(
         magic_link: {
-          transport: 'email'
+          transport: 'email',
           success: false,
+          email:'joe@example.com',
           phone_number: '+447123456789',
           failure_reason: 'INVALID_CODE'
         }
