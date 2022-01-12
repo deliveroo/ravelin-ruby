@@ -61,4 +61,26 @@ describe Ravelin::AuthenticationMechanism do
       expect(subject.sms_code.success).to eq(false)
     end
   end
+
+  context 'for magic_link authentication mechanisms' do
+    subject do
+      described_class.new(
+        magic_link: {
+          transport: 'email',
+          success: false,
+          email:'joe@example.com',
+          phone_number: '+447123456789',
+          failure_reason: 'INVALID_LINK'
+        }
+      )
+    end
+
+    it 'creates instance with valid params' do
+      expect { subject }.to_not raise_exception
+    end
+
+    it 'creates a magic_link object' do
+      expect(subject.magic_link.success).to eq(false)
+    end
+  end
 end

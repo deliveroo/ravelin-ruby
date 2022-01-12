@@ -39,6 +39,7 @@ module Ravelin
         password:                 Password,
         social:                   AuthenticationMechanisms::Social,
         sms_code:                 AuthenticationMechanisms::SmsCode,
+        magic_link:               AuthenticationMechanisms::MagicLink,
         payment_method:           PaymentMethod,
         supplier:                 Supplier,
         voucher_redemption:       VoucherRedemption,
