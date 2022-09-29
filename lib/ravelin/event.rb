@@ -41,6 +41,7 @@ module Ravelin
         sms_code:                 AuthenticationMechanisms::SmsCode,
         magic_link:               AuthenticationMechanisms::MagicLink,
         payment_method:           PaymentMethod,
+        payment_methods:          PaymentMethods,
         supplier:                 Supplier,
         voucher_redemption:       VoucherRedemption,
         transaction:              transaction,
@@ -140,7 +141,7 @@ module Ravelin
         k = k.to_sym
         v = Ravelin.convert_ids_to_strings(k, v)
 
-        if v.is_a?(Hash) && klass = object_classes[k]
+        if (v.is_a?(Hash) || v.is_a?(Array)) && (klass = object_classes[k])
           [k, klass.new(v)]
         else
           [k, v]
