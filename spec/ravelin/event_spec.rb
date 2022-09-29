@@ -6,13 +6,15 @@ end
 
 describe Ravelin::Event do
   let(:event) do
-    described_class.new(name: :ping, timestamp: 12345, payload: {})
+    described_class.new(name: :ping, timestamp: 12345, payload: payload)
   end
+  let(:payload) { {} }
 
   describe '#serializable_hash' do
     let(:dummy) { MyDummyClass.new(name: 'Fraudster') }
+    let(:mock_payload) { true }
 
-    before { allow(event).to receive(:payload).and_return(payload) }
+    before { allow(event).to receive(:payload).and_return(payload) if mock_payload }
 
     context 'payload with non Ravelin objects' do
       let(:payload) { { name: 'John' } }
@@ -33,6 +35,18 @@ describe Ravelin::Event do
           'timestamp' => 12345,
           'dummy' => { 'name' => 'Fraudster' }
         })
+      end
+
+      context 'payment methods' do
+        let(:payload) { { payment_methods: [dummy] } }
+        let(:mock_payload) { false }
+
+        it 'converts the Ravelin objects to hash with camelcase keys' do
+          expect(event.serializable_hash).to eq({
+                                                  'timestamp' => 12345,
+                                                  'paymentMethods' => [{ 'name' => 'Fraudster' }]
+                                                })
+        end
       end
     end
   end
