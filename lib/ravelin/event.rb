@@ -17,6 +17,8 @@ module Ravelin
 
         if v.is_a?(Ravelin::RavelinObject)
           [k, v.serializable_hash]
+        elsif v.is_a?(Array)
+          [k, v.map { |elem| elem.respond_to?(:serializable_hash) ? elem.serializable_hash : elem }]
         else
           [k, v]
         end
@@ -47,6 +49,12 @@ module Ravelin
         transaction:              transaction,
         label:                    Label,
         voucher:                  Voucher,
+      }
+    end
+
+    def plural_object_classes
+      {
+        transactions: transaction
       }
     end
 
@@ -143,6 +151,8 @@ module Ravelin
 
         if (v.is_a?(Hash) || v.is_a?(Array)) && (klass = object_classes[k])
           [k, klass.new(v)]
+        elsif v.is_a?(Array) && (klass = plural_object_classes[k])
+          [k, v.map { |elem| klass.new(elem) }]
         else
           [k, v]
         end
