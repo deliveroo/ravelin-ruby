@@ -464,6 +464,24 @@ describe Ravelin::Event do
 
     end
 
+    context 'when checkout contains transactions' do
+      let(:transactions) { { transaction_id: '123', currency: 'GBP', gateway: 'gw', gateway_reference: '1234', success: true, debit: 123, credit: 0 } }
+      let(:transactions2) { { transaction_id: '456', currency: 'GBP', gateway: 'gw', gateway_reference: '4567', success: true, debit: 456, credit: 0 } }
+
+      let(:payload) { { event_type: 'test', transactions: [transactions, transactions2] } }
+
+      it 'is valid' do
+        expect(event.serializable_hash).to eql({
+                                                 'eventType' => 'test',
+                                                 'timestamp' => 12345,
+                                                 'transactions' => [
+                                                   { 'credit' => 0, 'currency' => 'GBP', 'debit' => 123, 'gateway' => 'gw', 'gatewayReference' => '1234', 'success' => true, 'transactionId' => '123' },
+                                                   { 'credit' => 0, 'currency' => 'GBP', 'debit' => 456, 'gateway' => 'gw', 'gatewayReference' => '4567', 'success' => true, 'transactionId' => '456' },
+                                                 ]
+                                               })
+      end
+    end
+
     context 'when checkout contains a preTransaction' do
 
       let (:payload) { { event_type: 'test', transaction: { transaction_id: '123', currency: 'GBP', gateway: 'gw', debit: 123, credit: 0 } } }
