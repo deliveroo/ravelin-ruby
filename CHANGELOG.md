@@ -1,3 +1,9 @@
+# 0.1.45
+
+Serialize multiple payment methods [#89](https://github.com/deliveroo/ravelin-ruby/pull/89)
+Serialize multiple transactions [#90](https://github.com/deliveroo/ravelin-ruby/pull/90)
+Update Webmock and rake [#91](https://github.com/deliveroo/ravelin-ruby/pull/91)
+
 # 0.1.44
 
 
