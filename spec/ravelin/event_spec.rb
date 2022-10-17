@@ -38,13 +38,13 @@ describe Ravelin::Event do
       end
 
       context 'payment methods' do
-        let(:payload) { { payment_methods: [dummy] } }
+        let(:payload) { { payment_methods: [{ method_type: 'card', payment_method_id: 1 }] } }
         let(:mock_payload) { false }
 
         it 'converts the Ravelin objects to hash with camelcase keys' do
           expect(event.serializable_hash).to eq({
                                                   'timestamp' => 12345,
-                                                  'paymentMethods' => [{ 'name' => 'Fraudster' }]
+                                                  'paymentMethods' => [{ 'methodType' => 'card', 'paymentMethodId' => '1' }]
                                                 })
         end
       end
@@ -462,6 +462,24 @@ describe Ravelin::Event do
         expect(event.serializable_hash).to eql({'eventType'=>'test', 'timestamp'=>12345, 'transaction'=>{'credit'=>0, 'currency'=>'GBP', 'debit'=>123, 'gateway'=>'gw', 'gatewayReference'=>'1234', 'success'=>true, 'transactionId'=>'123'}})
       end
 
+    end
+
+    context 'when checkout contains payment methods' do
+      let(:payment_method) { { payment_method_id: 123, method_type: 'card' } }
+      let(:payment_method2) { { payment_method_id: 456, method_type: 'other' } }
+
+      let(:payload) { { event_type: 'test', payment_methods: [payment_method, payment_method2] } }
+
+      it 'is valid' do
+        expect(event.serializable_hash).to eql({
+                                                 'eventType' => 'test',
+                                                 'timestamp' => 12345,
+                                                 'paymentMethods' => [
+                                                   { 'paymentMethodId' => '123', 'methodType' => 'card' },
+                                                   { 'paymentMethodId' => '456', 'methodType' => 'other' },
+                                                 ]
+                                               })
+      end
     end
 
     context 'when checkout contains transactions' do
