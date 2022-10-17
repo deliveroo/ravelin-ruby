@@ -1,3 +1,7 @@
+# 0.1.46
+
+Fixed multiple payment methods serialization [#89](https://github.com/deliveroo/ravelin-ruby/pull/85)
+
 # 0.1.45
 
 Serialize multiple payment methods [#89](https://github.com/deliveroo/ravelin-ruby/pull/89)
