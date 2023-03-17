@@ -3,6 +3,7 @@ name: "CodeQL - Complete analysis"
 on:
   schedule:
     - cron: '44 23 12 * *' # Run CodeQL scan on a day of every month at 11:44 PM UTC
+  workflow_dispatch:
     
 jobs:
   analyze:
@@ -41,6 +42,7 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: 2.5 # The version of Ruby to use
+        bundler: 1.17.3
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       #env: 
       #  BUNDLE_GEMFILE: ./path/to/Gemfile # Change this to the path to your Gemfile if not in root
