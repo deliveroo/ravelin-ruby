@@ -70,7 +70,7 @@ module Ravelin
 
     def post(url, payload, headers = {})
       response = @connection.post(url, payload.to_json) do |request|
-        headers.each { |key, value|
+        headers&.each { |key, value|
           request.headers[key] =value
         }
       end
