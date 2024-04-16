@@ -1,6 +1,6 @@
 # 0.1.47
 
-Added support for passing optional request headers to ravelin client and ravelin proxy.
+Added support for passing optional request headers to ravelin client and ravelin proxy. 
 
 # 0.1.46
 
