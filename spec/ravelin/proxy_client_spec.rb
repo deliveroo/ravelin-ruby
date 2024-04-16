@@ -43,28 +43,58 @@ describe Ravelin::ProxyClient do
         )
     end
 
-    it 'calls #post with Event payload' do
+    context "without additional headers" do 
+      it 'calls #post with Event payload' do
       allow(Ravelin::Event).to receive(:new) { event }
 
-      expect(client).to receive(:post).with("/ravelinproxy/v2/foobar", { id: 'ch-123' })
+      expect(client).to receive(:post).with("/ravelinproxy/v2/foobar", { id: 'ch-123'}, nil)
 
       client.send_event
+      end
+
+      it 'calls #post with Event payload and score: true' do
+        allow(Ravelin::Event).to receive(:new) { event }
+
+        expect(client).to receive(:post).with("/ravelinproxy/v2/foobar?score=true", { id: 'ch-123'}, nil)
+
+        client.send_event(score: true)
+      end
+
+      it 'calls #post with Event payload and score: false' do
+        allow(Ravelin::Event).to receive(:new) { event }
+
+        expect(client).to receive(:post).with("/ravelinproxy/v2/foobar", { id: 'ch-123'}, nil)
+
+        client.send_event(score: false)
+      end
     end
 
-    it 'calls #post with Event payload and score: true' do
+    context "with additional headers" do 
+      let(:headers) {{ 'Proxy-H1': '1237' }}
+
+      it 'calls #post with Event payload' do
       allow(Ravelin::Event).to receive(:new) { event }
 
-      expect(client).to receive(:post).with("/ravelinproxy/v2/foobar?score=true", { id: 'ch-123' })
+      expect(client).to receive(:post).with("/ravelinproxy/v2/foobar", { id: 'ch-123'}, headers)
 
-      client.send_event(score: true)
-    end
+      client.send_event(headers: headers)
+      end
 
-    it 'calls #post with Event payload and score: false' do
-      allow(Ravelin::Event).to receive(:new) { event }
+      it 'calls #post with Event payload and score: true' do
+        allow(Ravelin::Event).to receive(:new) { event }
 
-      expect(client).to receive(:post).with("/ravelinproxy/v2/foobar", { id: 'ch-123' })
+        expect(client).to receive(:post).with("/ravelinproxy/v2/foobar?score=true", { id: 'ch-123'}, headers)
 
-      client.send_event(score: false)
+        client.send_event(score: true, headers: headers)
+      end
+
+      it 'calls #post with Event payload and score: false' do
+        allow(Ravelin::Event).to receive(:new) { event }
+
+        expect(client).to receive(:post).with("/ravelinproxy/v2/foobar", { id: 'ch-123'}, headers)
+
+        client.send_event(score: false, headers: headers)
+      end
     end
   end
 
@@ -170,7 +200,7 @@ describe Ravelin::ProxyClient do
     let(:headers) do
       {
         'Authorization' =>"Basic #{base64_enc_user_pass}",
-        'User-Agent'    => "Ravelin Proxy RubyGem/#{Ravelin::VERSION}".freeze
+        'User-Agent'    => "Ravelin Proxy RubyGem/#{Ravelin::VERSION}".freeze, 
       }
     end
 
@@ -187,6 +217,20 @@ describe Ravelin::ProxyClient do
           headers: { 'Content-Type' => 'application/json' },
           body: '{}')
       client.send_event
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'calls Ravelin Proxy with correct headers including extra headers and body' do
+      headers.merge!("Proxy-Extra-H": '1234') 
+      stub = stub_request(:post, "#{base_url}/ravelinproxy/v2/ping").
+        with(
+          body: { name: 'value' }.to_json,
+          headers: headers
+        ).and_return(
+          headers: { 'Content-Type' => 'application/json' },
+          body: '{}')
+      client.send_event(headers: {'Proxy-Extra-H': '1234'})
 
       expect(stub).to have_been_requested
     end

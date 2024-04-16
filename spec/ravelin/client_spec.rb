@@ -38,29 +38,58 @@ describe Ravelin::Client do
       )
     end
 
-    it 'calls #post with Event payload' do
-      allow(Ravelin::Event).to receive(:new) { event }
+    context "without additional headers" do 
+      let(:headers) {{ 'H1': '123' }}
+      it 'calls #post with Event payload' do
+        allow(Ravelin::Event).to receive(:new) { event }
 
-      expect(client).to receive(:post).with("/v2/foobar", { id: 'ch-123' })
+        expect(client).to receive(:post).with("/v2/foobar", { id: 'ch-123' }, headers)
 
-      client.send_event
-    end
+        client.send_event(headers: headers)
+      end
 
-    it 'calls #post with Event payload and score: true' do
-      allow(Ravelin::Event).to receive(:new) { event }
+      it 'calls #post with Event payload and score: true' do
+        allow(Ravelin::Event).to receive(:new) { event }
 
-      expect(client).to receive(:post).with("/v2/foobar?score=true", { id: 'ch-123' })
+        expect(client).to receive(:post).with("/v2/foobar?score=true", { id: 'ch-123' }, headers)
 
-      client.send_event(score: true)
-    end
+        client.send_event(score: true, headers: headers)
+      end
 
-    it 'calls #post with Event payload and score: false' do
-      allow(Ravelin::Event).to receive(:new) { event }
+      it 'calls #post with Event payload and score: false' do
+        allow(Ravelin::Event).to receive(:new) { event }
 
-      expect(client).to receive(:post).with("/v2/foobar", { id: 'ch-123' })
+        expect(client).to receive(:post).with("/v2/foobar", { id: 'ch-123' }, headers)
 
-      client.send_event(score: false)
-    end
+        client.send_event(score: false, headers: headers)
+      end
+    end 
+
+    context "wit additional headers" do 
+        it 'calls #post with Event payload' do
+        allow(Ravelin::Event).to receive(:new) { event }
+
+        expect(client).to receive(:post).with("/v2/foobar", { id: 'ch-123' }, nil)
+
+        client.send_event
+      end
+
+      it 'calls #post with Event payload and score: true' do
+        allow(Ravelin::Event).to receive(:new) { event }
+
+        expect(client).to receive(:post).with("/v2/foobar?score=true", { id: 'ch-123' }, nil)
+
+        client.send_event(score: true)
+      end
+
+      it 'calls #post with Event payload and score: false' do
+        allow(Ravelin::Event).to receive(:new) { event }
+
+        expect(client).to receive(:post).with("/v2/foobar", { id: 'ch-123' }, nil)
+
+        client.send_event(score: false)
+      end
+    end 
   end
 
   describe '#send_backfill_event' do
@@ -177,6 +206,21 @@ describe Ravelin::Client do
         )
 
       client.send_event
+
+      expect(stub).to have_been_requested
+    end
+
+    it "calls Ravelin with correct extra headers and body" do 
+      stub = stub_request(:post, 'https://api.ravelin.com/v2/ping').
+        with(
+          headers: { 'Authorization' => 'token abc', 'H2': '23434'},
+          body: { name: 'value' }.to_json,
+        ).and_return(
+          headers: { 'Content-Type' => 'application/json' },
+          body: '{}'
+        )
+
+      client.send_event(headers: {'H2': '23434'})
 
       expect(stub).to have_been_requested
     end

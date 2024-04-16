@@ -27,11 +27,12 @@ module Ravelin
 
     def send_event(**args)
       score = args.delete(:score)
+      headers = args.delete(:headers)
       event = Event.new(**args)
 
       score_param = score ? "?score=true" : nil
 
-      post("#{@url_prefix}/v#{@api_version}/#{event.name}#{score_param}", event.serializable_hash)
+      post("#{@url_prefix}/v#{@api_version}/#{event.name}#{score_param}", event.serializable_hash, headers)
     end
 
     def send_backfill_event(**args)
@@ -67,8 +68,12 @@ module Ravelin
 
     private
 
-    def post(url, payload)
-      response = @connection.post(url, payload.to_json)
+    def post(url, payload, headers = {})
+      response = @connection.post(url, payload.to_json) do |request|
+        headers&.each { |key, value|
+          request.headers[key] = value
+        }
+      end
 
       if response.success?
         Response.new(response)
