@@ -1,3 +1,7 @@
+# 0.1.47
+
+Added support for passing optional request headers to ravelin client and ravelin proxy.
+
 # 0.1.46
 
 Fixed multiple payment methods serialization [#89](https://github.com/deliveroo/ravelin-ruby/pull/85)
