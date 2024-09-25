@@ -1,3 +1,6 @@
+#0.1.48 
+Added transfer_type to payment_method 
+
 # 0.1.47
 
 Added support for passing optional request headers to ravelin client and ravelin proxy. 
