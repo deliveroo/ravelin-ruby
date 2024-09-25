@@ -23,6 +23,7 @@ module Ravelin
       :custom,
       :e_wallet,
       :scheme
+      :transfer_type
 
     attr_required :payment_method_id, :method_type
   end
