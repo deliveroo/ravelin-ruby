@@ -1,6 +1,8 @@
 # 0.1.48 
 
-Added transfer_type to payment_method 
+Added transfer_type to payment_method.
+Added transfer_type to payment_method.
+Updated ruby version to to 2.5.8 and bundler to 2.5.11
 
 # 0.1.47
 
