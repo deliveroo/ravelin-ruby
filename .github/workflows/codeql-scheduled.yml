@@ -41,8 +41,8 @@ jobs:
 
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.5 # The version of Ruby to use
-        bundler: 1.17.3
+        ruby-version: 3.2.4 # The version of Ruby to use
+        bundler: 2.5.9 
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       #env: 
       #  BUNDLE_GEMFILE: ./path/to/Gemfile # Change this to the path to your Gemfile if not in root
