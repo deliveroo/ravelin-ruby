@@ -198,7 +198,8 @@ describe Ravelin::Event do
           authentication_mechanism: {
             password: {
               password: 'super-secret-password',
-              success: true
+              success: true,
+              emailPassword: 'big.jim@deliveroo.invalidsuper-secret-password',
             }
           }
         }
@@ -237,7 +238,9 @@ describe Ravelin::Event do
             'authenticationMechanism' => {
               'password' => {
                 'passwordHashed' => '5c76fcf4400da3b4804d70b91af20703d483f2c5860cc2f8d59592a1da8d2121',
-                'success' => true
+                'success' => true,
+                'emailPasswordSHA256' => '60b980431585b5ec81dffba0dc11cf44b583d8925924af5f71d756404ef2e0a7',
+                'passwordSHA1SHA256' => '8f8db8a623009b56dc4ed8c47ede9d6a72d7569dcdfcedd6c1b7a3f441719f67',
               }
             },
             'customerId' => '123',
@@ -268,6 +271,7 @@ describe Ravelin::Event do
             authentication_mechanism: {
               password: {
                 password: 'super-secret-password',
+                emailPassword: 'big.jim@deliveroo.invalidsuper-secret-password',
                 success: true
               }
             }
@@ -303,13 +307,16 @@ describe Ravelin::Event do
           timestamp: 1586283630
         ).serializable_hash
 
+        puts output
         expect(output).to eq(
           {
             "login" => {
               "authenticationMechanism" => {
                 "password" => {
                   "passwordHashed" => "5c76fcf4400da3b4804d70b91af20703d483f2c5860cc2f8d59592a1da8d2121",
-                  "success" => true
+                  "success" => true, 
+                  'emailPasswordSHA256' => '60b980431585b5ec81dffba0dc11cf44b583d8925924af5f71d756404ef2e0a7',
+                  'passwordSHA1SHA256' => '8f8db8a623009b56dc4ed8c47ede9d6a72d7569dcdfcedd6c1b7a3f441719f67',
                 }
               },
               "customerId" => "123",
