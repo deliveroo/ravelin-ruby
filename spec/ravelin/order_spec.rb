@@ -56,4 +56,28 @@ describe Ravelin::Order do
       end
     end
   end
+
+  describe '#suppliers=' do
+    let(:order) { described_class.new(order_id: 1, status: { stage: 'cancelled', reason: 'buyer' }, suppliers: suppliers) }
+
+    context 'argument not an array' do
+      let(:suppliers) { 'a string' }
+
+      it 'raises ArgumentError' do
+        expect { order }.to raise_exception(ArgumentError)
+      end
+    end
+
+    context 'argument is an array' do
+      let(:suppliers) { [ { type: "restaurant", supplier_id: 1 }, { type: "shop", supplier_id: 2 }] }
+
+      it 'converts Array items into Ravelin::OrderSuppluer' do
+        expect(order.suppliers).to include(
+          instance_of(Ravelin::OrderSupplier),
+          instance_of(Ravelin::OrderSupplier)
+        )
+      end
+    end
+  end
+
 end
