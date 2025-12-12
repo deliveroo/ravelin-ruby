@@ -1,3 +1,7 @@
+# 0.1.50
+
+Add order_supplier to order
+
 # 0.1.48 
 
 Added transfer_type to payment_method.

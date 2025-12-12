@@ -15,7 +15,8 @@ module Ravelin
       :execution_time,
       :status,
       :app,
-      :category
+      :category,
+      :suppliers
 
     attr_required :order_id
 
@@ -35,6 +36,12 @@ module Ravelin
 
     def app=(obj)
       @app = Ravelin::App.new(obj)
+    end
+
+    def suppliers=(arr)
+      raise ArgumentError.new('items= requires an Array') unless arr.is_a?(Array)
+
+      @suppliers = arr.map { |supplier| Ravelin::OrderSupplier.new(supplier) }
     end
   end
 end

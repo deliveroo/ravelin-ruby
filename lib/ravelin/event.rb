@@ -38,6 +38,7 @@ module Ravelin
         location:                 Location,
         login:                    Login,
         order:                    Order,
+        order_supplier:           OrderSupplier,
         password:                 Password,
         social:                   AuthenticationMechanisms::Social,
         sms_code:                 AuthenticationMechanisms::SmsCode,
