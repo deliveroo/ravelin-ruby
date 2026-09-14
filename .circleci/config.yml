@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 
 jobs:
   build:
@@ -16,7 +16,6 @@ jobs:
             bundle exec rake spec
 
 workflows:
-  version: 2
   test:
     jobs:
       - build
