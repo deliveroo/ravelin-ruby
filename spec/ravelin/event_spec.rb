@@ -157,7 +157,7 @@ describe Ravelin::Event do
           described_class.new(name: :transaction, payload: payload)
         }.to raise_exception(
           ArgumentError,
-          /parameters are mutally exclusive: payment_method_id, payment_method/
+          /parameters are mutually exclusive: payment_method_id, payment_method/
         )
       end
 
@@ -175,7 +175,7 @@ describe Ravelin::Event do
         )
       end
 
-      it 'is valid when one of the mutally exclusive keys is present' do
+      it 'is valid when one of the mutually exclusive keys is present' do
         [:payment_method, :payment_method_id].each do |key_to_remove|
           payload.dup.tap do |p|
             p.delete(key_to_remove)

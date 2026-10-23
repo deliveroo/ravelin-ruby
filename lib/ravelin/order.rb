@@ -39,7 +39,7 @@ module Ravelin
     end
 
     def suppliers=(arr)
-      raise ArgumentError.new('items= requires an Array') unless arr.is_a?(Array)
+      raise ArgumentError.new('suppliers= requires an Array') unless arr.is_a?(Array)
 
       @suppliers = arr.map { |supplier| Ravelin::OrderSupplier.new(supplier) }
     end
