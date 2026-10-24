@@ -125,7 +125,7 @@ module Ravelin
       intersection = mutually_exclusive_keys & payload.keys
 
       if intersection.size > 1
-        raise ArgumentError, "parameters are mutally exclusive: #{mutually_exclusive_keys.join(', ')}"
+        raise ArgumentError, "parameters are mutually exclusive: #{mutually_exclusive_keys.join(', ')}"
       elsif intersection.empty?
         raise ArgumentError, "payload must include one of: #{mutually_exclusive_keys.join(', ')}"
       end
